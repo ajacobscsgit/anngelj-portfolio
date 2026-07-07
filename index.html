@@ -12,106 +12,108 @@
 
     <meta name="author" content="Anngel Jacobs">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
+<body class="home-page">
 
-    <header class="site-header">
-        <a href="index.html" class="logo" aria-label="Anngel Jacobs Home">
-            👋
+    <header class="site-header home-header">
+        <a href="index.html" class="logo home-logo" aria-label="Anngel Jacobs Home">
+            <span class="logo-text">Aj</span>
+            <span class="logo-plus">+</span>
         </a>
 
-        <nav class="main-nav" aria-label="Main navigation">
-            <a href="index.html">Home</a>
+        <nav class="main-nav home-nav" aria-label="Main navigation">
+            <a href="index.html" aria-current="page">Home</a>
             <a href="about.html">About</a>
             <a href="portfolio.html">Portfolio</a>
             <a href="services.html">Services</a>
             <a href="journey.html">Journey</a>
             <a href="resources.html">Resources</a>
             <a href="shop.html">Shop</a>
-            <a href="contact.html" class="nav-button">Let's Connect</a>
-
         </nav>
+
+        <a href="contact.html" class="nav-button home-connect">Let's Connect</a>
     </header>
 
     <main>
 
-        <section class="hero">
-            <div class="hero-content">
+        <section class="home-hero">
+            <div class="home-hero-content">
+                <p class="home-kicker">HELLO, I'M ANNGEL JACOBS</p>
 
-                <p class="location">📍 Cleveland, Ohio</p>
-
-                <h1>
-                    I Build Data, Tech, and Business Solutions That Help Ideas Grow
-                </h1>
+                <h1>Business Solutions That Help Ideas Grow</h1>
 
                 <p class="hero-text">
                     I’m Anngel Jacobs, a computer science engineering student, founder, and analytics builder creating practical systems across data, software, entrepreneurship, and community impact.
                 </p>
 
-                <div class="hero-buttons">
-                    <a href="portfolio.html" class="button primary-button">See my work</a>
+                <div class="hero-buttons home-hero-buttons">
+                    <a href="portfolio.html" class="button primary-button">See my work <span aria-hidden="true">→</span></a>
                     <a href="contact.html" class="button secondary-button">Start a project</a>
                 </div>
-
             </div>
 
-            <div class="hero-image">
-                <img src="assets/images/profile.png" alt="Professional portrait of Anngel Jacobs">
+            <div class="home-hero-image" aria-hidden="true">
+                <span class="hero-star">✦</span>
+                <div class="hero-circle-outer">
+                    <div class="hero-circle-inner">
+                        <img src="assets/images/profile.png" alt="Professional portrait of Anngel Jacobs">
+                    </div>
+                </div>
             </div>
         </section>
 
-        <section class="featured-section">
-            <p class="section-label">Featured Work</p>
+        <section class="featured-section home-featured">
+            <p class="section-label home-label">FEATURED WORK</p>
 
             <h2>Projects, businesses, and systems I’m building</h2>
 
             <div class="card-grid">
 
-                <article class="card">
+                <article class="card home-card">
+                    <span class="card-icon" aria-hidden="true">📊</span>
                     <h3>Rukn Analytics</h3>
                     <p>Analytics, automation, dashboards, and business intelligence systems for small businesses.</p>
-                    <a href="portfolio.html">View project</a>
+                    <a href="portfolio.html">View project <span aria-hidden="true">→</span></a>
                 </article>
 
-                <article class="card">
+                <article class="card home-card">
+                    <span class="card-icon gold" aria-hidden="true">❤</span>
                     <h3>SeniorSitters</h3>
                     <p>A non-medical companion care business focused on dignity, support, outings, and peace of mind.</p>
-                    <a href="portfolio.html">View project</a>
+                    <a href="portfolio.html">View project <span aria-hidden="true">→</span></a>
                 </article>
 
-                <article class="card">
+                <article class="card home-card">
+                    <span class="card-icon" aria-hidden="true">💻</span>
                     <h3>Engineering Portfolio</h3>
                     <p>Software, data, research, and computer science projects built through school, business, and independent learning.</p>
-                    <a href="portfolio.html">View project</a>
+                    <a href="portfolio.html">View project <span aria-hidden="true">→</span></a>
                 </article>
 
             </div>
         </section>
 
-        <section class="about-preview">
-            <div>
-                <p class="section-label">About</p>
+        <section class="about-preview home-about-preview">
+            <div class="home-about-grid">
+                <div>
+                    <p class="section-label home-label">ABOUT</p>
+                    <h2>Engineer in training. Founder in motion. Builder by nature.</h2>
+                </div>
 
-                <h2>Engineer in training. Founder in motion. Builder by nature.</h2>
-
-                <p>
+                <div>
+                    <p>
                     My work sits at the intersection of computer science, analytics, entrepreneurship, education, and community-centered problem solving.
-                </p>
+                    </p>
 
-                <a href="about.html" class="text-link">Learn more about me</a>
+                    <a href="about.html" class="text-link">Learn more about me <span aria-hidden="true">→</span></a>
+                </div>
             </div>
-        </section>
-
-        <section class="cta-section">
-            <h2>Want to work together?</h2>
-
-            <p>
-                Whether it’s analytics, a website, tutoring, consulting, or a speaking opportunity, you can reach me here.
-            </p>
-
-            <a href="contact.html" class="button primary-button">Connect with me</a>
         </section>
 
     </main>
@@ -121,7 +123,7 @@
 
         <div class="footer-links">
             <a href="privacy-policy.html">Privacy Policy</a>
-            <a href="terms-and-conditions.html">Terms and Conditions</a>
+            <a href="terms-conditions.html">Terms and Conditions</a>
             <a href="contact.html">Contact</a>
         </div>
     </footer>

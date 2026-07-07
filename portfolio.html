@@ -12,15 +12,22 @@
 
     <meta name="author" content="Anngel Jacobs">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
+<body class="portfolio-page">
 
-    <header class="site-header">
-        <a href="index.html" class="logo" aria-label="Anngel Jacobs Home">Anngel</a>
+    <header class="site-header home-header portfolio-top-header">
+        <a href="index.html" class="logo home-logo" aria-label="Anngel Jacobs Home">
+            <span class="logo-text">Aj</span>
+            <span class="logo-plus">+</span>
+        </a>
 
-        <nav class="main-nav" aria-label="Main navigation">
+        <nav class="main-nav home-nav" aria-label="Main navigation">
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="portfolio.html" aria-current="page">Portfolio</a>
@@ -28,266 +35,98 @@
             <a href="journey.html">Journey</a>
             <a href="resources.html">Resources</a>
             <a href="shop.html">Shop</a>
-            <a href="contact.html" class="nav-button">Let's Connect</a>
         </nav>
+
+        <a href="contact.html" class="nav-button home-connect">Let's Connect</a>
     </header>
 
     <main>
 
-        <section class="page-hero portfolio-hero">
-            <p class="eyebrow">Portfolio</p>
-
-            <h1>Building across analytics, software, research, business, and technical systems.</h1>
-
-            <p>
-                A curated collection of my projects, ventures, technical work, leadership experience, and professional growth as a computer science engineering student and founder.
-            </p>
-
-            <div class="hero-actions">
-                <a href="docs/resume.pdf" target="_blank" class="button primary-button">View Resume</a>
-                <a href="https://github.com/ajacobscsgit" target="_blank" class="button secondary-button">View GitHub</a>
-            </div>
-        </section>
-
-        <section class="featured-projects">
-            <div class="section-heading">
-                <p class="eyebrow">Featured Work</p>
-                <h2>Projects and ventures</h2>
-            </div>
-
-            <div class="portfolio-grid">
-
-                <article class="portfolio-card featured-card">
-                    <img src="assets/images/rukn-analytics.jpg" alt="Rukn Analytics website preview">
-
-                    <div>
-                        <p class="project-category">Business · Analytics · Systems</p>
-
-                        <h3>Rukn Analytics</h3>
-
-                        <p>
-                            Analytics consulting business focused on dashboards, KPI reporting, automation, business intelligence, and workflow optimization.
-                        </p>
-
-                        <ul>
-                            <li>Founder and operations consultant</li>
-                            <li>Built reporting and operational workflows</li>
-                            <li>Developed dashboard and automation service offerings</li>
-                        </ul>
-
-                        <div class="project-tags">
-                            <span>Data Analytics</span>
-                            <span>Dashboards</span>
-                            <span>KPI Reporting</span>
-                            <span>Automation</span>
-                        </div>
-
-                        <a href="https://ruknanalytics.com" target="_blank" class="text-link">Visit website</a>
-                    </div>
-                </article>
-
-                <article class="portfolio-card featured-card">
-                    <img src="assets/images/seniorsitters.jpg" alt="SeniorSitters website preview">
-
-                    <div>
-                        <p class="project-category">Business · Operations · Community</p>
-
-                        <h3>SeniorSitters</h3>
-
-                        <p>
-                            Non-medical companion care business focused on dignity, family relief, outings, companionship, and peace of mind.
-                        </p>
-
-                        <ul>
-                            <li>Co-founder and operations builder</li>
-                            <li>Developed care request and hiring workflows</li>
-                            <li>Built public-facing service and caregiver pages</li>
-                        </ul>
-
-                        <div class="project-tags">
-                            <span>Operations</span>
-                            <span>Client Intake</span>
-                            <span>Care Systems</span>
-                            <span>Web Design</span>
-                        </div>
-
-                        <a href="https://seniorsittersco.com" target="_blank" class="text-link">Visit website</a>
-                    </div>
-                </article>
-
-                <article class="portfolio-card featured-card">
-                    <img src="assets/images/business-dashboard.jpg" alt="Business performance dashboard preview">
-
-                    <div>
-                        <p class="project-category">Analytics · Excel · KPI Reporting</p>
-
-                        <h3>Business Performance Dashboard</h3>
-
-                        <p>
-                            Interactive dashboard designed to analyze business performance data, track KPIs, identify trends, and support decision-making.
-                        </p>
-
-                        <ul>
-                            <li>Designed KPI tracking metrics</li>
-                            <li>Used pivot tables, charts, formulas, and conditional formatting</li>
-                            <li>Created executive-style summaries and visual reports</li>
-                        </ul>
-
-                        <div class="project-tags">
-                            <span>Excel</span>
-                            <span>Data Cleaning</span>
-                            <span>Dashboards</span>
-                            <span>Reporting</span>
-                        </div>
-
-                        <a href="https://github.com/ajacobscsgit" target="_blank" class="text-link">View GitHub</a>
-                    </div>
-                </article>
-
-            </div>
-        </section>
-
-        <section class="portfolio-categories">
-            <div class="section-heading">
-                <p class="eyebrow">Categories</p>
-                <h2>Areas of work</h2>
-            </div>
-
-            <div class="card-grid">
-
-                <article class="info-card">
-                    <h3>Software Development</h3>
-                    <p>
-                        Websites, programming projects, front-end development, GitHub repositories, and technical experiments.
-                    </p>
-                </article>
-
-                <article class="info-card">
-                    <h3>Data Analytics</h3>
-                    <p>
-                        Dashboards, KPI reporting, spreadsheets, data cleaning, SQL, Python, and business intelligence projects.
-                    </p>
-                </article>
-
-                <article class="info-card">
-                    <h3>Research & Laboratory</h3>
-                    <p>
-                        Biotechnology, clinical research, experimental documentation, cardiovascular and metabolic research exposure.
-                    </p>
-                </article>
-
-                <article class="info-card">
-                    <h3>Business Ventures</h3>
-                    <p>
-                        Founder-led projects involving operations, websites, systems, service design, and process improvement.
-                    </p>
-                </article>
-
-                <article class="info-card">
-                    <h3>Technical Operations</h3>
-                    <p>
-                        IT troubleshooting, networking fundamentals, documentation, healthcare operations, and workflow support.
-                    </p>
-                </article>
-
-                <article class="info-card">
-                    <h3>Leadership</h3>
-                    <p>
-                        Student organizations, leadership development, member engagement, communication, and community involvement.
-                    </p>
-                </article>
-
-            </div>
-        </section>
-
-        <section class="certifications-section">
-            <div class="section-heading">
-                <p class="eyebrow">Credentials</p>
-                <h2>Certifications and organizations</h2>
-            </div>
-
-            <div class="credential-grid">
-
-                <article class="credential-card">
-                    <h3>CCNP Enterprise Core Networking</h3>
-                    <p>Cisco certification focused on enterprise networking concepts and infrastructure.</p>
-                </article>
-
-                <article class="credential-card">
-                    <h3>CCNA Enterprise Networking, Security & Automation</h3>
-                    <p>Cisco networking certification covering routing, switching, security, and automation fundamentals.</p>
-                </article>
-
-                <article class="credential-card">
-                    <h3>Biotechnology Science Certificate</h3>
-                    <p>Completed through Lakeland Community College alongside biotechnology coursework and laboratory training.</p>
-                </article>
-
-                <article class="credential-card">
-                    <h3>Machine Tool: Fusion 360</h3>
-                    <p>Completed through IACMI America’s Cutting Edge with CAD/CAM and manufacturing exposure.</p>
-                </article>
-
-                <article class="credential-card">
-                    <h3>National Society of Leadership and Success</h3>
-                    <p>Vice President, supporting member engagement, communication, and leadership activities.</p>
-                </article>
-
-                <article class="credential-card">
-                    <h3>IEEE Women in Engineering</h3>
-                    <p>Student organization involvement supporting engineering, technology, and professional development.</p>
-                </article>
-
-            </div>
-        </section>
-
-        <section class="resume-section">
-            <div class="section-heading">
-                <p class="eyebrow">Resume</p>
-
-                <h2>View my full professional background</h2>
-
-                <p>
-                    My resume includes education, technical skills, analytics experience, research work, healthcare operations, leadership, and certifications.
+        <section class="portfolio-hero-reference">
+            <div class="portfolio-hero-copy">
+                <p class="portfolio-kicker">PORTFOLIO</p>
+                <h1>Building solutions. Solving real problems.</h1>
+                <span class="portfolio-divider" aria-hidden="true"></span>
+                <p class="portfolio-lead">
+                    A collection of projects and platforms I've built across data, software, analytics, and entrepreneurship.
                 </p>
+
+                <div class="portfolio-filter-tabs" aria-label="Project categories">
+                    <a href="#" class="is-active">All</a>
+                </div>
             </div>
 
-            <div class="resume-actions">
-                <a href="docs/resume.pdf" target="_blank" class="button primary-button">Open Resume</a>
-                <a href="docs/resume.pdf" download class="button secondary-button">Download Resume</a>
-                <a href="https://github.com/ajacobscsgit" target="_blank" class="button secondary-button">GitHub</a>
-            </div>
-        </section>
-
-        <section class="portfolio-gallery">
-            <div class="section-heading">
-                <p class="eyebrow">Gallery</p>
-
-                <h2>Visual highlights</h2>
-
-                <p>
-                    Add screenshots, project previews, speaking photos, workspace images, certificates, dashboards, and website mockups here.
-                </p>
-            </div>
-
-            <div class="gallery-grid">
-                <img src="assets/images/gallery-1.jpg" alt="Portfolio project screenshot">
-                <img src="assets/images/gallery-2.jpg" alt="Dashboard or analytics project screenshot">
-                <img src="assets/images/gallery-3.jpg" alt="Professional or leadership photo">
-                <img src="assets/images/gallery-4.jpg" alt="Technical or business project photo">
+            <div class="portfolio-hero-art" aria-hidden="true">
+                <span class="hero-ring star-center">✦</span>
+                <span class="hero-ring ring-1"></span>
+                <span class="hero-ring ring-2"></span>
+                <span class="hero-ring ring-3"></span>
+                <span class="hero-dot"></span>
             </div>
         </section>
 
-        <section class="page-cta">
-            <p class="eyebrow">Let’s Build</p>
+        <section class="portfolio-featured-wrap">
+            <p class="portfolio-kicker">FEATURED PROJECTS</p>
 
-            <h2>Interested in working together?</h2>
+            <div class="portfolio-cards-grid">
+                <article class="portfolio-card-item">
+                    <img src="assets/images/rukn-analytics.jpg" alt="Rukn Analytics Website">
+                    <div class="card-copy">
+                        <p class="card-type">WEBSITE</p>
+                        <h3>Rukn Analytics Website</h3>
+                        <p>Professional website for my analytics consulting business offering KPI audits, dashboards, and automation solutions.</p>
+                        <a href="https://ruknanalytics.com" target="_blank" rel="noopener noreferrer">View Project →</a>
+                    </div>
+                </article>
 
-            <p>
-                Whether you’re looking for an analytics builder, technical collaborator, speaker, tutor, or founder-minded problem solver, I’d love to connect.
-            </p>
+                <article class="portfolio-card-item">
+                    <img src="assets/images/seniorsitters.jpg" alt="SeniorSitters Website">
+                    <div class="card-copy">
+                        <p class="card-type">WEBSITE</p>
+                        <h3>SeniorSitters Website</h3>
+                        <p>Website for my non-medical companion care business focused on support, dignity, outings, and peace of mind.</p>
+                        <a href="https://seniorsittersco.com" target="_blank" rel="noopener noreferrer">View Project →</a>
+                    </div>
+                </article>
 
-            <a href="contact.html" class="button primary-button">Contact Me</a>
+                <article class="portfolio-card-item">
+                    <img src="assets/images/business-dashboard.jpg" alt="CareHub Platform">
+                    <div class="card-copy">
+                        <p class="card-type">SYSTEM</p>
+                        <h3>CareHub Platform</h3>
+                        <p>Operations platform for SeniorSitters to manage clients, caregivers, schedules, timesheets, training, and reporting.</p>
+                        <a href="portfolio.html">View Project →</a>
+                    </div>
+                </article>
+
+                <article class="portfolio-card-item">
+                    <img src="assets/images/profile.png" alt="Portfolio Website">
+                    <div class="card-copy">
+                        <p class="card-type">WEBSITE</p>
+                        <h3>Portfolio Website</h3>
+                        <p>My personal portfolio showcasing projects, experience, certifications, and the work I'm building.</p>
+                        <a href="index.html">View Project →</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="portfolio-resume-preview">
+            <div class="resume-preview-copy">
+                <p class="portfolio-kicker">RESUME PREVIEW</p>
+                <h2>Professional Overview</h2>
+                <span class="portfolio-divider" aria-hidden="true"></span>
+                <p>Here's a preview of my resume. View the full version to see my complete experience, skills, education, and achievements.</p>
+
+                <div class="resume-buttons">
+                    <a href="docs/resume.pdf" target="_blank" class="button primary-button">View Full Resume</a>
+                    <a href="docs/resume.pdf" download class="button secondary-button">Download Resume (PDF)</a>
+                </div>
+            </div>
+
+            <article class="resume-preview-card" aria-label="Resume content preview">
+                <iframe src="docs/resume.pdf#page=1&view=FitV&toolbar=0&navpanes=0&scrollbar=0" title="Resume preview first page" loading="lazy" scrolling="no"></iframe>
+            </article>
         </section>
 
     </main>
@@ -296,10 +135,8 @@
         <p>&copy; 2026 Anngel Jacobs. All rights reserved.</p>
 
         <div class="footer-links">
-            <a href="about.html">About</a>
-            <a href="resume.html">Resume</a>
             <a href="privacy-policy.html">Privacy Policy</a>
-            <a href="terms-and-conditions.html">Terms and Conditions</a>
+            <a href="terms-conditions.html">Terms and Conditions</a>
             <a href="contact.html">Contact</a>
         </div>
     </footer>

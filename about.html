@@ -12,230 +12,170 @@
 
     <meta name="author" content="Anngel Jacobs">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
+<body class="about-page">
 
-    <header class="site-header">
-        <a href="index.html" class="logo" aria-label="Anngel Jacobs Home">
-            Anngel
+    <header class="site-header home-header about-top-header">
+        <a href="index.html" class="logo home-logo" aria-label="Anngel Jacobs Home">
+            <span class="logo-text">Aj</span>
+            <span class="logo-plus">+</span>
         </a>
 
-        <nav class="main-nav" aria-label="Main navigation">
+        <nav class="main-nav home-nav" aria-label="Main navigation">
             <a href="index.html">Home</a>
-            <a href="about.html">About</a>
+            <a href="about.html" aria-current="page">About</a>
             <a href="portfolio.html">Portfolio</a>
             <a href="services.html">Services</a>
             <a href="journey.html">Journey</a>
             <a href="resources.html">Resources</a>
             <a href="shop.html">Shop</a>
-            <a href="contact.html" class="nav-button">Let's Connect</a>
-
         </nav>
+
+        <a href="contact.html" class="nav-button home-connect">Let's Connect</a>
     </header>
 
     <main>
 
-        <section class="about-hero">
-            <div class="about-hero-content">
-                <p class="eyebrow">About Anngel</p>
-
-                <h1>Building at the intersection of technology, analytics, business, and community.</h1>
-
-                <p class="hero-description">
-                    I’m Anngel Jacobs, a computer science engineering student, founder, and analytics builder based in Cleveland, Ohio. I create practical systems that help ideas become clearer, businesses become stronger, and communities feel better supported.
+        <section class="about-reference-hero">
+            <div class="about-reference-copy">
+                <p class="about-kicker">ABOUT ME</p>
+                <h1>Engineer in training, Founder in motion. Builder by nature.</h1>
+                <span class="about-divider" aria-hidden="true"></span>
+                <p class="about-lead">
+                    I'm Anngel Jacobs, a computer science engineering student, founder, and analytics builder passionate about using technology and data to solve real problems and create meaningful impact in the world.
                 </p>
 
-                <div class="hero-actions">
-                    <a href="portfolio.html" class="button primary-button">View my work</a>
-                    <a href="journey.html" class="button secondary-button">Read my journey</a>
+                <div class="about-chip-row">
+                    <article class="about-chip">
+                        <span aria-hidden="true">🎓</span>
+                        <div>
+                            <strong>Computer Science</strong>
+                            <small>Engineering Student</small>
+                        </div>
+                    </article>
+
+                    <article class="about-chip">
+                        <span aria-hidden="true">📈</span>
+                        <div>
+                            <strong>Founder</strong>
+                            <small>Rukn Analytics</small>
+                        </div>
+                    </article>
+
+                    <article class="about-chip">
+                        <span aria-hidden="true">♡</span>
+                        <div>
+                            <strong>Founder</strong>
+                            <small>SeniorSitters</small>
+                        </div>
+                    </article>
                 </div>
             </div>
 
-            <div class="about-hero-image">
-                <img src="assets/images/about-portrait.jpg" alt="Professional portrait of Anngel Jacobs">
+            <div class="about-reference-photo" aria-hidden="true">
+                <span class="about-star">✦</span>
+                <div class="about-arch-frame">
+                    <img src="assets/images/about-portrait.jpg" alt="Professional portrait of Anngel Jacobs">
+                </div>
             </div>
         </section>
 
-        <section class="about-summary">
-            <div class="section-heading">
-                <p class="eyebrow">Who I Am</p>
-                <h2>Engineer in training. Founder in motion. Builder by nature.</h2>
-            </div>
+        <section class="about-story-block">
+            <div class="about-story-copy">
+                <p class="about-kicker">MY STORY</p>
+                <h2>How it all started</h2>
+                <span class="about-divider" aria-hidden="true"></span>
 
-            <div class="text-columns">
                 <p>
-                    My work sits between people, data, and systems. I enjoy taking scattered ideas and turning them into clean websites, useful dashboards, organized workflows, and practical tools.
+                    My journey began with curiosity and a drive to understand how things work. From an early interest in problem solving to studying computer science engineering, I've always been drawn to systems, whether it's code, data, people, or process.
                 </p>
 
                 <p>
-                    My background includes computer science, biotechnology, analytics, entrepreneurship, and community-centered service. That mix shapes how I approach problems: technically, creatively, and with real people in mind.
+                    I believe in continuous learning, working with integrity, and using my skills to empower others. Through Rukn Analytics and SeniorSitters, I've experienced firsthand how technology and compassion can create lasting change.
                 </p>
+
+                <p class="story-emphasis">This is just the beginning.</p>
+            </div>
+
+            <div class="about-story-photo">
+                <img src="assets/images/about-workspace.jpg" alt="Anngel Jacobs writing at a desk with laptop">
             </div>
         </section>
 
-        <section class="about-video">
-            <div class="section-heading">
-                <p class="eyebrow">Meet Me</p>
-                <h2>A short introduction</h2>
-                <p>
-                    This video is where I introduce myself, my work, what I’m building, and where I’m headed.
-                </p>
-            </div>
+        <section class="about-drives-section">
+            <p class="about-kicker">WHAT DRIVES ME</p>
 
-            <div class="video-frame">
-                <video controls poster="assets/images/about-video-cover.jpg">
-                    <source src="assets/videos/about-intro.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-        </section>
-
-        <section class="currently-building">
-            <div class="section-heading">
-                <p class="eyebrow">Currently Building</p>
-                <h2>What has my attention right now</h2>
-            </div>
-
-            <div class="card-grid">
-                <article class="info-card">
-                    <h3>Computer Science Engineering</h3>
-                    <p>
-                        Studying software, systems, mathematics, and engineering while developing a strong technical foundation.
-                    </p>
+            <div class="drive-grid">
+                <article class="drive-item">
+                    <span class="drive-icon" aria-hidden="true">💡</span>
+                    <h3>Problem Solving</h3>
+                    <p>I love turning complex challenges into simple, effective solutions.</p>
                 </article>
 
-                <article class="info-card">
-                    <h3>Rukn Analytics</h3>
-                    <p>
-                        Building analytics, dashboard, automation, and business intelligence solutions for growing organizations.
-                    </p>
+                <article class="drive-item">
+                    <span class="drive-icon" aria-hidden="true">📈</span>
+                    <h3>Growth Mindset</h3>
+                    <p>I'm committed to lifelong learning and becoming better every day.</p>
                 </article>
 
-                <article class="info-card">
-                    <h3>SeniorSitters</h3>
-                    <p>
-                        Helping grow a non-medical companion care business focused on dignity, companionship, outings, and family peace of mind.
-                    </p>
+                <article class="drive-item">
+                    <span class="drive-icon" aria-hidden="true">👥</span>
+                    <h3>Community Impact</h3>
+                    <p>I build with people in mind, creating value that improves lives and strengthens communities.</p>
+                </article>
+
+                <article class="drive-item">
+                    <span class="drive-icon" aria-hidden="true">♡</span>
+                    <h3>Purpose &amp; Faith</h3>
+                    <p>My faith guides my purpose, values, and the way I show up in everything I do.</p>
                 </article>
             </div>
         </section>
 
-        <section class="photo-gallery">
-            <div class="section-heading">
-                <p class="eyebrow">Photos</p>
-                <h2>Professional snapshots</h2>
-                <p>
-                    A small visual gallery for professional photos, work moments, speaking, community involvement, and creative shots.
-                </p>
+        <section class="about-media-panel">
+            <div class="media-left">
+                <p class="about-kicker">A LITTLE MORE ABOUT ME</p>
+                <div class="media-video-card">
+                    <video controls poster="assets/images/about-video-cover.jpg">
+                        <source src="assets/videos/about-intro.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <p class="media-caption">A short introduction to who I am, what I do, and what drives me.</p>
             </div>
 
-            <div class="gallery-grid">
-                <img src="assets/images/about-workspace.jpg" alt="Anngel Jacobs working at a laptop">
-                <img src="assets/images/about-speaking.jpg" alt="Anngel Jacobs speaking or presenting">
-                <img src="assets/images/about-community.jpg" alt="Anngel Jacobs at a community or professional event">
-                <img src="assets/images/about-lifestyle.jpg" alt="Anngel Jacobs professional lifestyle photo">
-            </div>
-        </section>
-
-        <section class="values-section">
-            <div class="section-heading">
-                <p class="eyebrow">Values</p>
-                <h2>How I approach my work</h2>
-            </div>
-
-            <div class="card-grid">
-                <article class="info-card">
-                    <h3>Clarity</h3>
-                    <p>
-                        I like making complicated ideas easier to understand through structure, design, writing, and systems.
-                    </p>
-                </article>
-
-                <article class="info-card">
-                    <h3>Service</h3>
-                    <p>
-                        I believe technology and business should help real people, not just look impressive from a distance.
-                    </p>
-                </article>
-
-                <article class="info-card">
-                    <h3>Growth</h3>
-                    <p>
-                        I care about learning deeply, improving consistently, and building something better with every project.
-                    </p>
-                </article>
+            <div class="media-right">
+                <p class="about-kicker">MOMENTS THAT SHAPE ME</p>
+                <div class="moment-grid">
+                    <img src="assets/images/about-speaking.jpg" alt="Speaking and sharing ideas">
+                    <img src="assets/images/about-workspace.jpg" alt="Working with technology and analytics">
+                    <img src="assets/images/gallery-3.jpg" alt="Sports and discipline moments">
+                    <img src="assets/images/about-community.jpg" alt="Community and nature moments">
+                </div>
+                <p class="media-caption">Lessons from classrooms, courts, code, and community.</p>
             </div>
         </section>
 
-        <section class="skills-section">
-            <div class="section-heading">
-                <p class="eyebrow">Skills</p>
-                <h2>Areas I’m developing</h2>
+        <section class="about-bottom-cta">
+            <div>
+                <h2>Let's build something amazing together.</h2>
+                <span class="about-divider" aria-hidden="true"></span>
             </div>
 
-            <div class="skill-tags">
-                <span>HTML</span>
-                <span>CSS</span>
-                <span>JavaScript</span>
-                <span>Python</span>
-                <span>Java</span>
-                <span>SQL</span>
-                <span>Data Analytics</span>
-                <span>Dashboards</span>
-                <span>Automation</span>
-                <span>Business Systems</span>
-                <span>Technical Writing</span>
-                <span>Public Speaking</span>
-            </div>
-        </section>
+            <p>I'm always open to meaningful projects, collaborations, and opportunities to create impact.</p>
 
-        <section class="beyond-work">
-            <div class="section-heading">
-                <p class="eyebrow">Beyond Work</p>
-                <h2>A little more human</h2>
-            </div>
+            <a href="contact.html" class="button primary-button">Let's Connect <span aria-hidden="true">→</span></a>
 
-            <p>
-                Outside of school and business, I enjoy learning languages, playing sports, studying Qur'an, exploring ideas, and being involved in community-centered work. I’m especially drawn to projects that combine discipline, creativity, and service.
-            </p>
-        </section>
-
-        <section class="quick-facts">
-            <div class="fact-card">
-                <strong>2</strong>
-                <span>Businesses</span>
-            </div>
-
-            <div class="fact-card">
-                <strong>CS Engineering</strong>
-                <span>Degree Path</span>
-            </div>
-
-            <div class="fact-card">
-                <strong>Analytics</strong>
-                <span>Core Focus</span>
-            </div>
-
-            <div class="fact-card">
-                <strong>Cleveland</strong>
-                <span>Home Base</span>
-            </div>
-        </section>
-
-        <section class="about-cta">
-            <p class="eyebrow">Next Step</p>
-
-            <h2>Want the full story?</h2>
-
-            <p>
-                This page gives the snapshot. My Journey page shares the chapters, milestones, lessons, and growth behind it.
-            </p>
-
-            <div class="cta-actions">
-                <a href="journey.html" class="button primary-button">Read my journey</a>
-                <a href="contact.html" class="button secondary-button">Connect with me</a>
+            <div class="about-cta-meta">
+                <span>✉ Professional Communication</span>
+                <span>🤝 Open to Collaboration</span>
+                <span>🌐 Building for Impact</span>
             </div>
         </section>
 
@@ -245,10 +185,8 @@
         <p>&copy; 2026 Anngel Jacobs. All rights reserved.</p>
 
         <div class="footer-links">
-            <a href="about.html">About</a>
-            <a href="resume.html">Resume</a>
             <a href="privacy-policy.html">Privacy Policy</a>
-            <a href="terms-and-conditions.html">Terms and Conditions</a>
+            <a href="terms-conditions.html">Terms and Conditions</a>
             <a href="contact.html">Contact</a>
         </div>
     </footer>
