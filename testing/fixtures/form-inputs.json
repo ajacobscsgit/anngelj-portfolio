@@ -1,0 +1,20 @@
+{
+  "contact": {
+    "name": "Jordan Rivera",
+    "email": "jordan.rivera@example.com",
+    "subject": "Website Inquiry",
+    "message": "Hello, I would like to discuss a project."
+  },
+  "serviceRequest": {
+    "fullName": "Jordan Rivera",
+    "email": "jordan.rivera@example.com",
+    "company": "Rivera Labs",
+    "serviceRequested": "website-development",
+    "projectSummary": "Need a landing page and contact flow.",
+    "timeline": "4-6 weeks"
+  },
+  "invalid": {
+    "emptyEmail": "",
+    "badEmail": "invalid-email-format"
+  }
+}

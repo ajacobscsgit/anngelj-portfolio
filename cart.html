@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart | Anngel Jacobs</title>
+    <meta name="description" content="Review digital downloads, apply promo code, and checkout securely.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="shop-page cart-page">
+    <header class="site-header home-header shop-top-header">
+        <a href="index.html" class="logo home-logo" aria-label="Anngel Jacobs Home">
+            <span class="logo-text">Aj</span>
+            <span class="logo-plus">+</span>
+        </a>
+
+        <nav class="main-nav home-nav" aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="portfolio.html">Portfolio</a>
+            <a href="services.html">Services</a>
+            <a href="resources.html">Resources</a>
+            <a href="shop.html" aria-current="page">Shop</a>
+        </nav>
+
+        <a href="contact.html" class="nav-button home-connect">Let's Connect</a>
+    </header>
+
+    <main class="cart-main">
+        <section class="cart-hero">
+            <p class="shop-kicker">CART</p>
+            <h1>Order Summary</h1>
+            <p>Review your selected resources and continue to secure checkout.</p>
+            <div class="checkout-progress" aria-label="Checkout progress">
+                <span class="is-active">Cart</span>
+                <span>Checkout</span>
+                <span>Payment</span>
+                <span>Downloads</span>
+            </div>
+        </section>
+
+        <section class="cart-layout" aria-label="Cart details and checkout summary">
+            <div class="cart-page-items" data-cart-page-items></div>
+
+            <aside class="cart-page-summary">
+                <h2>Summary</h2>
+                <label for="promo-code">Promo code</label>
+                <div class="promo-row">
+                    <input id="promo-code" type="text" placeholder="Enter promo code">
+                    <button type="button" class="button secondary-button" data-apply-promo>Apply</button>
+                </div>
+                <p class="promo-feedback" data-promo-feedback></p>
+
+                <div class="summary-lines">
+                    <p><span>Subtotal</span><strong data-summary-subtotal>$0.00</strong></p>
+                    <p><span>Estimated Tax</span><strong data-summary-tax>$0.00</strong></p>
+                    <p class="summary-total"><span>Total</span><strong data-summary-total>$0.00</strong></p>
+                </div>
+
+                <div class="secure-badges" aria-label="Secure checkout badges">
+                    <span>Visa</span>
+                    <span>Mastercard</span>
+                    <span>American Express</span>
+                    <span>Discover</span>
+                    <span>Apple Pay</span>
+                    <span>Google Pay</span>
+                    <span>Link</span>
+                </div>
+
+                <div class="cart-page-actions">
+                    <a href="shop.html" class="button secondary-button">Continue Shopping</a>
+                    <button type="button" class="button primary-button" data-cart-page-checkout>Checkout</button>
+                </div>
+            </aside>
+        </section>
+
+        <footer class="site-footer shop-footer">
+            <p>&copy; 2026 Anngel Jacobs. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="https://www.linkedin.com/in/anngel-j-807340393" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a href="https://github.com/ajacobscsgit" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="docs/resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+                <a href="mailto:resume@anngelj.com">Email</a>
+                <a href="contact.html">Let's Connect &rarr;</a>
+            </div>
+        </footer>
+    </main>
+
+    <script src="js/main.js"></script>
+    <script src="js/shop-data.js"></script>
+    <script src="js/shop-core.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+</html>

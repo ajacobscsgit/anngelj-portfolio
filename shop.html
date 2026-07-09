@@ -1,50 +1,316 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Shop | Anngel Jacobs</title>
-	<meta name="description" content="Shop page for Anngel Jacobs. This section is currently in development.">
+	<meta name="description" content="Premium digital download shop by Anngel Jacobs with curated templates, planners, and toolkits.">
 	<meta name="author" content="Anngel Jacobs">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="css/style.css">
 </head>
+<body class="shop-page">
+	<header class="site-header home-header shop-top-header">
+		<a href="index.html" class="logo home-logo" aria-label="Anngel Jacobs Home">
+			<span class="logo-text">Aj</span>
+			<span class="logo-plus">+</span>
+		</a>
 
-<body>
-	<header class="site-header">
-		<a href="index.html" class="logo" aria-label="Anngel Jacobs Home">Anngel</a>
-
-		<nav class="main-nav" aria-label="Main navigation">
+		<nav class="main-nav home-nav" aria-label="Main navigation">
 			<a href="index.html">Home</a>
 			<a href="about.html">About</a>
 			<a href="portfolio.html">Portfolio</a>
 			<a href="services.html">Services</a>
 			<a href="resources.html">Resources</a>
 			<a href="shop.html" aria-current="page">Shop</a>
-			<a href="contact.html" class="nav-button">Let's Connect</a>
 		</nav>
+
+		<div class="shop-header-actions">
+			<button type="button" class="shop-cart-trigger" data-open-cart aria-label="Open cart">
+				<span aria-hidden="true">Cart</span>
+				<span class="shop-cart-count" data-cart-count>0</span>
+			</button>
+			<a href="contact.html" class="nav-button home-connect">Let's Connect</a>
+		</div>
 	</header>
 
-	<main>
-		<section class="page-hero">
-			<p class="eyebrow">In Development</p>
-			<h1>Shop page is coming soon.</h1>
-			<p>I'm actively building this section. Check back soon for updates.</p>
+	<main class="shop-page-layout" aria-label="Shop layout">
+		<section class="shop-intro" aria-labelledby="shop-intro-heading">
+			<div class="shop-intro-copy">
+				<p class="shop-kicker">SHOP</p>
+				<span class="portfolio-divider" aria-hidden="true"></span>
+				<p>Curated digital resources for students, engineers, entrepreneurs, and lifelong learners.</p>
+			</div>
+			<div class="shop-intro-aside" aria-label="Shop highlights">
+				<div class="shop-intro-banner">
+					<p class="shop-kicker">Featured Sale</p>
+					<strong>50% OFF launch pricing</strong>
+					<span>Instant downloads with premium support.</span>
+				</div>
+			</div>
 		</section>
+
+		<section class="shop-marketplace" aria-label="Product marketplace">
+			<aside class="shop-filter-panel" aria-label="Product filters">
+				<button type="button" class="shop-filter-toggle" data-filter-toggle aria-controls="shop-filter-body" aria-expanded="true">Filters</button>
+				<div class="shop-filter-body" id="shop-filter-body">
+					<p class="shop-panel-kicker">Refine your browse</p>
+
+					<label class="shop-filter-label" for="shop-search">Search</label>
+					<div class="shop-search-shell">
+						<span class="shop-search-icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M10.5 4a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13Zm0 2a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm5.94 8.54 3.78 3.78-1.41 1.41-3.78-3.78 1.41-1.41Z" fill="currentColor"/></svg>
+						</span>
+						<input id="shop-search" type="search" placeholder="Search templates, planners, guides..." autocomplete="off" aria-label="Search products">
+						<button type="button" class="shop-search-clear" data-clear-search aria-label="Clear search" hidden>&times;</button>
+					</div>
+
+					<fieldset class="shop-filter-group" aria-label="Categories">
+						<legend>Categories</legend>
+						<div class="shop-chip-list" data-category-filters></div>
+					</fieldset>
+
+					<fieldset class="shop-filter-group" aria-label="Product type filter">
+						<legend>Product Type</legend>
+						<label class="shop-checkbox-row"><input type="radio" name="type-filter" value="all" checked> All types</label>
+						<label class="shop-checkbox-row"><input type="radio" name="type-filter" value="planner"> Planners</label>
+						<label class="shop-checkbox-row"><input type="radio" name="type-filter" value="guide"> Guides</label>
+						<label class="shop-checkbox-row"><input type="radio" name="type-filter" value="workbook"> Workbooks</label>
+						<label class="shop-checkbox-row"><input type="radio" name="type-filter" value="bundle"> Bundles</label>
+					</fieldset>
+
+					<fieldset class="shop-filter-group" aria-label="Price filter">
+						<legend>Price</legend>
+						<label class="shop-checkbox-row"><input type="radio" name="price-filter" value="all" checked> All prices</label>
+						<label class="shop-checkbox-row"><input type="radio" name="price-filter" value="under-10"> Under $10</label>
+						<label class="shop-checkbox-row"><input type="radio" name="price-filter" value="10-15"> $10 to $15</label>
+						<label class="shop-checkbox-row"><input type="radio" name="price-filter" value="16-20"> $16 to $20</label>
+						<label class="shop-checkbox-row"><input type="radio" name="price-filter" value="20-plus"> $20+</label>
+					</fieldset>
+
+					<fieldset class="shop-filter-group" aria-label="Rating filter">
+						<legend>Rating</legend>
+						<label class="shop-checkbox-row"><input type="radio" name="rating-filter" value="all" checked> Any rating</label>
+						<label class="shop-checkbox-row"><input type="radio" name="rating-filter" value="5"> ★★★★★</label>
+						<label class="shop-checkbox-row"><input type="radio" name="rating-filter" value="4"> ★★★★☆ and up</label>
+					</fieldset>
+
+					<fieldset class="shop-filter-group" aria-label="Additional filters">
+						<legend>Availability</legend>
+						<label class="shop-checkbox-row"><input id="instant-download" type="checkbox"> Instant Download</label>
+						<label class="shop-checkbox-row"><input id="lifetime-updates" type="checkbox"> Lifetime Updates</label>
+						<label class="shop-checkbox-row"><input id="free-only" type="checkbox"> Free Only</label>
+						<label class="shop-checkbox-row"><input id="bundles-only" type="checkbox"> Bundles</label>
+						<label class="shop-checkbox-row"><input id="recent-only" type="checkbox"> Recently Added</label>
+						<label class="shop-checkbox-row"><input id="sale-only" type="checkbox"> On sale</label>
+						<label class="shop-checkbox-row"><input id="highest-rated" type="checkbox"> Highest rated</label>
+					</fieldset>
+
+					<label class="shop-filter-label" for="sidebar-sort">Sort</label>
+					<select id="sidebar-sort" class="shop-sort-select" aria-label="Sort products from sidebar">
+						<option value="featured">Featured</option>
+						<option value="newest">Newest</option>
+						<option value="rating-desc">Highest Rated</option>
+						<option value="price-asc">Price: Low to High</option>
+						<option value="price-desc">Price: High to Low</option>
+						<option value="title-asc">Name: A to Z</option>
+					</select>
+				</div>
+			</aside>
+
+			<div class="shop-product-panel" aria-label="Products">
+				<div class="shop-toolbar" role="region" aria-label="Shop toolbar">
+					<p class="shop-count" data-product-count>0 products</p>
+					<div class="shop-toolbar-controls">
+						<label for="toolbar-sort">Sort</label>
+						<select id="toolbar-sort" class="shop-sort-select" aria-label="Sort products from toolbar">
+							<option value="featured">Featured</option>
+							<option value="newest">Newest</option>
+							<option value="rating-desc">Highest Rated</option>
+							<option value="price-asc">Price: Low to High</option>
+							<option value="price-desc">Price: High to Low</option>
+							<option value="title-asc">Name: A to Z</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="shop-product-scroll" aria-live="polite">
+					<section id="shop-grid" aria-label="Digital products"></section>
+				</div>
+			</div>
+		</section>
+
+		<section class="shop-reviews" aria-labelledby="shop-reviews-heading">
+			<div class="shop-section-divider" aria-hidden="true"></div>
+			<div class="shop-reviews-strip" aria-label="Store reviews overview">
+				<div>
+					<p class="shop-kicker">Customer Reviews</p>
+					<p class="shop-review-summary">Overall rating from recent buyers.</p>
+				</div>
+				<div class="shop-review-score">
+					<strong data-shop-rating>4.9</strong>
+					<span data-shop-review-stars>★★★★★</span>
+					<small data-shop-review-count>3 Reviews</small>
+				</div>
+			</div>
+			<h2 id="shop-reviews-heading">Customer Reviews</h2>
+			<div class="shop-review-cards" data-featured-review-cards>
+				<article class="shop-review-card">
+					<div class="shop-review-card-top"><strong>Hana M.</strong><span>★★★★★</span></div>
+					<p>This shop feels incredibly polished. The planner bundle is clean, practical, and beautiful to use.</p>
+				</article>
+				<article class="shop-review-card">
+					<div class="shop-review-card-top"><strong>Devon R.</strong><span>★★★★★</span></div>
+					<p>The SQL and dashboard downloads are the kind of premium resources I wish I had earlier.</p>
+				</article>
+				<article class="shop-review-card">
+					<div class="shop-review-card-top"><strong>Amina K.</strong><span>★★★★★</span></div>
+					<p>Elegant branding, fast checkout flow, and the product previews make browsing easy.</p>
+				</article>
+			</div>
+			<div class="shop-review-actions">
+				<button type="button" class="button secondary-button shop-leave-review-button" data-open-review-form>Leave a Review</button>
+				<button type="button" class="button secondary-button shop-leave-review-button" data-open-all-reviews>See All Reviews</button>
+			</div>
+		</section>
+
+		<div class="shop-section-divider" aria-hidden="true"></div>
+
+		<section class="shop-newsletter" aria-labelledby="shop-newsletter-heading">
+			<h2 id="shop-newsletter-heading">Get New Drops First</h2>
+			<p>Join the list for new templates, free downloads, and launch promotions.</p>
+			<form class="shop-newsletter-form" action="#" method="post" novalidate>
+				<label for="newsletter-email" class="sr-only">Email</label>
+				<input id="newsletter-email" type="email" placeholder="you@example.com" required>
+				<button type="submit" class="button primary-button">Join Newsletter</button>
+			</form>
+		</section>
+
+		<div class="shop-section-divider" aria-hidden="true"></div>
+
+		<footer class="site-footer shop-footer">
+			<p>&copy; 2026 Anngel Jacobs. All rights reserved.</p>
+			<div class="footer-links">
+				<a href="https://www.linkedin.com/in/anngel-j-807340393" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+				<a href="https://github.com/ajacobscsgit" target="_blank" rel="noopener noreferrer">GitHub</a>
+				<a href="docs/resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+				<a href="mailto:resume@anngelj.com">Email</a>
+				<a href="contact.html">Let's Connect &rarr;</a>
+			</div>
+		</footer>
 	</main>
 
-	    <footer class="site-footer">
-        <p>&copy; 2026 Anngel Jacobs. All rights reserved.</p>
+	<section class="shop-review-modal" data-review-modal aria-hidden="true">
+		<div class="shop-review-overlay" data-close-review-form></div>
+		<article class="shop-review-dialog" role="dialog" aria-modal="true" aria-labelledby="shop-review-form-heading">
+			<button type="button" class="shop-review-close" data-close-review-form aria-label="Close review form">&times;</button>
+			<div class="shop-review-dialog-head">
+				<p class="shop-kicker">Leave a review</p>
+				<h2 id="shop-review-form-heading">Share your experience</h2>
+				<p>Pick a star rating and leave a short note about the product quality, checkout, or overall shop experience.</p>
+			</div>
+			<form class="shop-review-form-grid shop-review-dialog-form" data-review-form>
+				<label>
+					<span>Your name</span>
+					<input type="text" name="reviewName" maxlength="40" placeholder="Alex Johnson" required>
+				</label>
+				<label>
+					<span>Review title</span>
+					<input type="text" name="reviewTitle" maxlength="60" placeholder="Premium and polished" required>
+				</label>
+				<div class="shop-review-stars-block">
+					<span>Rating</span>
+					<div class="shop-star-rating" data-review-stars role="radiogroup" aria-label="Rating out of 5 stars"></div>
+					<input type="hidden" name="reviewRating" value="5" data-review-rating-value>
+				</div>
+				<label class="shop-review-textarea">
+					<span>Your review</span>
+					<textarea name="reviewBody" maxlength="500" placeholder="Write a short review about your experience..." required></textarea>
+				</label>
+				<div class="shop-review-dialog-actions">
+					<button type="button" class="button secondary-button" data-close-review-form>Cancel</button>
+					<button type="submit" class="button primary-button">Submit Review</button>
+				</div>
+			</form>
+		</article>
+	</section>
 
-        <div class="footer-links">
-            <a href="https://www.linkedin.com/in/anngel-j-807340393" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a href="https://github.com/ajacobscsgit" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a href="docs/resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
-            <a href="mailto:resume@anngelj.com">Email</a>
-            <a href="contact.html">Let's Connect &rarr;</a>
-        </div>
-    </footer>
+	<section class="shop-reviews-modal" data-all-reviews-modal aria-hidden="true">
+		<div class="shop-review-overlay" data-close-all-reviews></div>
+		<article class="shop-reviews-dialog" role="dialog" aria-modal="true" aria-labelledby="shop-all-reviews-heading">
+			<button type="button" class="shop-review-close" data-close-all-reviews aria-label="Close reviews list">&times;</button>
+			<div class="shop-review-dialog-head">
+				<p class="shop-kicker">All reviews</p>
+				<h2 id="shop-all-reviews-heading">Curated customer reviews</h2>
+				<p data-all-reviews-summary>Latest reviews from verified readers and buyers.</p>
+			</div>
+			<div class="shop-reviews-list" data-all-reviews-list></div>
+		</article>
+	</section>
+
+	<section class="shop-preview-modal" data-preview-modal aria-hidden="true">
+		<div class="shop-preview-overlay" data-close-preview></div>
+		<article class="shop-preview-dialog" role="dialog" aria-modal="true" aria-label="Quick preview">
+			<button type="button" class="shop-preview-close" data-close-preview aria-label="Close preview">&times;</button>
+			<div class="shop-preview-grid">
+				<div class="shop-preview-media">
+					<div class="shop-preview-cover" data-preview-cover></div>
+					<div class="shop-preview-gallery" data-preview-gallery></div>
+				</div>
+				<div class="shop-preview-copy">
+					<p class="shop-category-badge" data-preview-category></p>
+					<h2 data-preview-title></h2>
+					<p data-preview-description></p>
+					<p class="shop-reviews-row" data-preview-reviews></p>
+					<div class="shop-preview-mini-stats">
+						<span>Instant Download</span>
+						<span>Lifetime Updates</span>
+						<span>Premium Files</span>
+					</div>
+					<ul class="shop-preview-includes" data-preview-includes></ul>
+					<section class="shop-preview-section">
+						<h3>Preview Pages</h3>
+						<div class="shop-preview-pages" data-preview-pages></div>
+					</section>
+					<section class="shop-preview-section">
+						<h3>Related Resources</h3>
+						<div class="shop-preview-related" data-preview-related></div>
+					</section>
+					<div class="shop-price-row" data-preview-price></div>
+					<div class="shop-preview-actions">
+						<button type="button" class="button primary-button" data-preview-add>Add to Cart</button>
+						<button type="button" class="button secondary-button" data-preview-buy>Buy Now</button>
+					</div>
+				</div>
+			</div>
+		</article>
+	</section>
+
+	<aside class="cart-drawer" aria-label="Shopping cart" aria-hidden="true" data-cart-drawer>
+		<div class="cart-overlay" data-close-cart></div>
+		<div class="cart-panel" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+			<header class="cart-header">
+				<h2 id="cart-title">Your Cart</h2>
+				<button type="button" class="cart-close" data-close-cart aria-label="Close cart">&times;</button>
+			</header>
+			<div class="cart-items" data-cart-items></div>
+			<div class="cart-summary">
+				<p><span>Subtotal</span><strong data-cart-subtotal>$0.00</strong></p>
+				<p><span>Estimated Tax</span><strong data-cart-tax>$0.00</strong></p>
+				<p class="cart-total"><span>Total</span><strong data-cart-total>$0.00</strong></p>
+				<div class="cart-actions">
+					<button type="button" class="button primary-button" data-checkout>Checkout</button>
+					<a href="cart.html" class="button secondary-button">View Cart</a>
+				</div>
+			</div>
+		</div>
+	</aside>
+
+	<script src="js/main.js"></script>
+	<script src="js/shop-data.js"></script>
+	<script src="js/shop-core.js"></script>
+	<script src="js/shop.js"></script>
 </body>
-<script src="js/main.js"></script>
-
 </html>
