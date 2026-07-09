@@ -1687,7 +1687,7 @@ p {
 
 .hero-ring {
     position: absolute;
-    border: 1.2px solid #ece2d4;
+    border: 1.2px solid #e2c296;
     border-radius: 50%;
 }
 
@@ -1708,7 +1708,7 @@ p {
 
 .star-center {
     border: none;
-    color: #c89e57;
+    color: #9b783c;
     font-size: 2rem;
 }
 
