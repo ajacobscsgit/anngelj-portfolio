@@ -2,39 +2,88 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Resources | Anngel Jacobs</title>
-	<meta name="description" content="Resources page for Anngel Jacobs. This section is currently in development.">
-	<meta name="author" content="Anngel Jacobs">
-	<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources | Anngel J</title>
+    <meta name="description" content="A curated collection of practical guides, templates, tools, and trusted learning resources for continuous growth.">
+    <meta name="author" content="Anngel Jacobs">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
-	<header class="site-header">
-		<a href="index.html" class="logo" aria-label="Anngel Jacobs Home">Anngel</a>
+<body class="resources-page">
+    <header class="site-header home-header resources-top-header">
+        <a href="index.html" class="logo home-logo" aria-label="Anngel Jacobs Home">
+            <span class="logo-text">Aj</span>
+            <span class="logo-plus">+</span>
+        </a>
 
-		<nav class="main-nav" aria-label="Main navigation">
-			<a href="index.html">Home</a>
-			<a href="about.html">About</a>
-			<a href="portfolio.html">Portfolio</a>
-			<a href="services.html">Services</a>
-			<a href="journey.html">Journey</a>
-			<a href="resources.html" aria-current="page">Resources</a>
-			<a href="shop.html">Shop</a>
-			<a href="contact.html" class="nav-button">Let's Connect</a>
-		</nav>
-	</header>
+        <nav class="main-nav home-nav" aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="portfolio.html">Portfolio</a>
+            <a href="services.html">Services</a>
+            <a href="resources.html" aria-current="page">Resources</a>
+            <a href="shop.html">Shop</a>
+        </nav>
 
-	<main>
-		<section class="page-hero">
-			<p class="eyebrow">In Development</p>
-			<h1>Resources page is coming soon.</h1>
-			<p>I'm actively building this section. Check back soon for updates.</p>
-		</section>
-	</main>
+        <a href="contact.html" class="nav-button home-connect">Let's Connect</a>
+    </header>
 
-	    <footer class="site-footer">
+    <main class="resources-main">
+
+        <section class="resources-controls" aria-label="Search and filter recommended resources">
+            <label for="resource-search" class="resources-control-label">Search resources library</label>
+            <input id="resource-search" type="search" placeholder="Search by title, description, category, or tags" autocomplete="off">
+            <div class="resource-filter-chips" role="group" aria-label="Filter recommendations">
+                <button type="button" class="resource-chip" data-filter="programming">Programming</button>
+                <button type="button" class="resource-chip" data-filter="computer-science">Computer Science</button>
+                <button type="button" class="resource-chip" data-filter="networking">Networking</button>
+                <button type="button" class="resource-chip" data-filter="mathematics">Mathematics</button>
+                <button type="button" class="resource-chip" data-filter="analytics">Analytics</button>
+                <button type="button" class="resource-chip" data-filter="career">Career</button>
+                <button type="button" class="resource-chip" data-filter="design">Design</button>
+                <button type="button" class="resource-chip" data-filter="accessibility">Accessibility</button>
+                <button type="button" class="resource-chip" data-filter="ai">AI</button>
+                <button type="button" class="resource-chip" data-filter="fitness">Fitness</button>
+                <button type="button" class="resource-chip" data-filter="health">Health</button>
+                <button type="button" class="resource-chip" data-filter="favorites">Favorites</button>
+            </div>
+        </section>
+
+        <section class="resources-section curated-library-section" id="recommended-learning" aria-labelledby="recommended-learning-heading">
+            <h2 id="recommended-learning-heading">Recommended Resources</h2>
+            <p class="resources-subtitle resources-subtitle-strong">These are trusted resources I've personally used or consistently recommend to students, professionals, founders, and lifelong learners. Rather than searching through thousands of websites, start with these carefully selected resources.</p>
+
+            <div class="recommendation-stats" aria-label="Recommendation summary">
+                <span>20+ Recommended Resources</span>
+                <span>8 Learning Categories</span>
+                <span>Beginner Friendly</span>
+                <span>Continuously Updated</span>
+            </div>
+
+
+            <div class="curated-library-grid" id="recommended-library-grid" aria-live="polite"></div>
+        </section>
+
+        <section class="resources-section health-performance-section" id="health-performance" aria-labelledby="health-performance-heading">
+            <h2 id="health-performance-heading">Health, Fitness &amp; Performance</h2>
+            <p class="resources-subtitle">Resources that support physical health, athletic development, recovery, discipline, and sustainable habits.</p>
+            <div class="curated-library-grid" id="health-library-grid" aria-live="polite"></div>
+        </section>
+
+        <section class="resources-section favorites-section" id="favorite-resources" aria-labelledby="favorite-resources-heading">
+            <h2 id="favorite-resources-heading">My Favorite Resources</h2>
+            <p class="resources-subtitle">If I were starting over today, these are the first resources I'd recommend.</p>
+            <div class="favorites-grid" id="favorite-library-grid" aria-live="polite"></div>
+        </section>
+
+        <p class="resource-empty-state" id="recommended-empty-state" hidden>No matches found in the recommended library for your current search and filters.</p>
+    </main>
+
+    <footer class="site-footer">
         <p>&copy; 2026 Anngel Jacobs. All rights reserved.</p>
 
         <div class="footer-links">
@@ -45,7 +94,8 @@
             <a href="contact.html">Let's Connect &rarr;</a>
         </div>
     </footer>
+
+    <script src="js/main.js"></script>
 </body>
-<script src="js/main.js"></script>
 
 </html>

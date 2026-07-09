@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Submission confirmation page.">
+    <title>Thank You | Anngel J</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="thank-you-page">
+    <header class="site-header home-header services-top-header">
+        <a href="index.html" class="logo home-logo" aria-label="Anngel Jacobs Home">
+            <span class="logo-text">Aj</span>
+            <span class="logo-plus">+</span>
+        </a>
+
+        <nav class="main-nav home-nav" aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="portfolio.html">Portfolio</a>
+            <a href="services.html">Services</a>
+            <a href="resources.html">Resources</a>
+            <a href="shop.html">Shop</a>
+        </nav>
+
+        <a href="contact.html" class="nav-button home-connect">Let's Connect</a>
+    </header>
+
+    <main class="thank-you-main">
+        <section class="thank-you-hero" aria-labelledby="thank-you-heading">
+            <p class="thank-you-kicker">SUCCESS</p>
+            <h1 id="thank-you-heading">Thank You</h1>
+        </section>
+
+        <section class="thank-you-card" aria-label="Submission confirmation">
+            <p id="thank-you-message">Your submission has been received.</p>
+            <p>I'll review your submission and respond within 1-2 business days.</p>
+
+            <div class="thank-you-actions">
+                <a href="services.html" class="button primary-button">Back to Services</a>
+                <a href="portfolio.html" class="button secondary-button">View Portfolio</a>
+                <a href="index.html" class="button secondary-button">Go Home</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Anngel Jacobs. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="https://www.linkedin.com/in/anngel-j-807340393" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://github.com/ajacobscsgit" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="docs/resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+            <a href="mailto:resume@anngelj.com">Email</a>
+            <a href="contact.html">Let's Connect &rarr;</a>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        (function () {
+            var messageByType = {
+                contact: "Your message has been received.",
+                service: "Your service request has been received.",
+                launch: "Your launch promotion application has been received."
+            };
+            var params = new URLSearchParams(window.location.search);
+            var type = params.get("type");
+            var target = document.getElementById("thank-you-message");
+            target.textContent = messageByType[type] || "Your submission has been received.";
+        }());
+    </script>
+</body>
+</html>

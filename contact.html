@@ -1,51 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Contact | Anngel Jacobs</title>
-	<meta name="description" content="Contact page for Anngel Jacobs. This section is currently in development.">
-	<meta name="author" content="Anngel Jacobs">
+	<meta name="description" content="General inquiries for collaborations, speaking, business opportunities, and questions.">
+	<title>Let's Connect | Anngel J</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="css/style.css">
 </head>
+<body class="inquiry-page contact-page">
+	<header class="site-header home-header services-top-header">
+		<a href="index.html" class="logo home-logo" aria-label="Anngel Jacobs Home">
+			<span class="logo-text">Aj</span>
+			<span class="logo-plus">+</span>
+		</a>
 
-<body>
-	<header class="site-header">
-		<a href="index.html" class="logo" aria-label="Anngel Jacobs Home">Anngel</a>
-
-		<nav class="main-nav" aria-label="Main navigation">
+		<nav class="main-nav home-nav" aria-label="Main navigation">
 			<a href="index.html">Home</a>
 			<a href="about.html">About</a>
 			<a href="portfolio.html">Portfolio</a>
 			<a href="services.html">Services</a>
-			<a href="journey.html">Journey</a>
 			<a href="resources.html">Resources</a>
 			<a href="shop.html">Shop</a>
-			<a href="contact.html" class="nav-button" aria-current="page">Let's Connect</a>
 		</nav>
+
+		<a href="contact.html" class="nav-button home-connect" aria-current="page">Let's Connect</a>
 	</header>
 
 	<main>
-		<section class="page-hero">
-			<p class="eyebrow">In Development</p>
-			<h1>Contact page is coming soon.</h1>
-			<p>I'm actively building this section. Check back soon for updates.</p>
+		<section class="inquiry-hero" aria-labelledby="contact-heading">
+			<p class="inquiry-kicker">CONTACT</p>
+			<h1 id="contact-heading">Let's Connect</h1>
+			<p>For service requests, consultations, collaborations, speaking, or general questions, use the form below and I'll respond within 1-2 business days.</p>
+		</section>
+
+		<section class="inquiry-layout" aria-label="Contact form and quick links">
+			<article class="inquiry-form-card">
+				<h2>General Inquiry Form</h2>
+				<p>Share a few details and I will reply with the right next step.</p>
+
+				<form class="inquiry-form" data-form-type="contact" data-thank-you-type="contact" novalidate>
+					<input type="hidden" name="form_category" value="general_contact">
+					<input type="hidden" name="service_requested" value="general-inquiry">
+					<input type="hidden" name="source_page" value="contact.html">
+					<div class="form-grid">
+						<div class="field-group">
+							<label for="contact-name">Full Name *</label>
+							<input id="contact-name" name="fullName" type="text" required aria-required="true" autocomplete="name">
+						</div>
+
+						<div class="field-group">
+							<label for="contact-email">Email *</label>
+							<input id="contact-email" name="email" type="email" required aria-required="true" autocomplete="email">
+						</div>
+
+						<div class="field-group field-group-full">
+							<label for="contact-subject">Subject *</label>
+							<input id="contact-subject" name="subject" type="text" required aria-required="true">
+						</div>
+
+						<div class="field-group field-group-full">
+							<label for="contact-inquiry-type">Inquiry Type</label>
+							<select id="contact-inquiry-type" name="inquiryType">
+								<option value="">Select an option</option>
+								<option value="General Question">General Question</option>
+								<option value="Collaboration">Collaboration</option>
+								<option value="Speaking">Speaking</option>
+								<option value="Business Inquiry">Business Inquiry</option>
+								<option value="Media / Community">Media / Community</option>
+								<option value="Other">Other</option>
+							</select>
+						</div>
+
+						<div class="field-group field-group-full">
+							<label for="contact-message">Message *</label>
+							<textarea id="contact-message" name="message" required aria-required="true"></textarea>
+						</div>
+					</div>
+
+					<p class="form-feedback" data-form-error role="alert" aria-live="polite"></p>
+
+					<div class="form-actions">
+						<button type="submit" class="button primary-button" data-submit-label="Send Message">Send Message</button>
+					</div>
+				</form>
+			</article>
+
+			<aside class="inquiry-side-card" aria-label="Quick links">
+				<h2>Quick Links</h2>
+				<p>Use the direct paths below for specific requests.</p>
+				<ul class="quick-link-list">
+					<li><a href="request-service.html">Request a Service</a></li>
+					<li><a href="https://calendar.app.google/VMVWfWRDWMRHh68Q6" target="_blank" rel="noopener noreferrer">Book a Consultation</a></li>
+					<li><a href="launch-promotion.html">Apply for Launch Promotion</a></li>
+					<li><a href="mailto:resume@anngelj.com">Email: resume@anngelj.com</a></li>
+					<li><a href="https://www.linkedin.com/in/anngel-j-807340393" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+					<li><a href="https://github.com/ajacobscsgit" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+				</ul>
+			</aside>
 		</section>
 	</main>
 
-	    <footer class="site-footer">
-        <p>&copy; 2026 Anngel Jacobs. All rights reserved.</p>
+	<footer class="site-footer">
+		<p>&copy; 2026 Anngel Jacobs. All rights reserved.</p>
+		<div class="footer-links">
+			<a href="https://www.linkedin.com/in/anngel-j-807340393" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+			<a href="https://github.com/ajacobscsgit" target="_blank" rel="noopener noreferrer">GitHub</a>
+			<a href="docs/resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+			<a href="mailto:resume@anngelj.com">Email</a>
+			<a href="contact.html">Let's Connect &rarr;</a>
+		</div>
+	</footer>
 
-        <div class="footer-links">
-            <a href="https://www.linkedin.com/in/anngel-j-807340393" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-            <a href="https://github.com/ajacobscsgit" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a href="docs/resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
-            <a href="mailto:resume@anngelj.com">Email</a>
-            <a href="contact.html">Let's Connect &rarr;</a>
-        </div>
-    </footer>
+	<script src="js/main.js"></script>
+	<script src="js/forms.js"></script>
 </body>
-<script src="js/main.js"></script>
-
 </html>

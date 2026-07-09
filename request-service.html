@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Request paid or free support services including tutoring, websites, analytics, career coaching, and more.">
+    <title>Request a Service | Anngel J</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="inquiry-page request-service-page">
+    <header class="site-header home-header services-top-header">
+        <a href="index.html" class="logo home-logo" aria-label="Anngel Jacobs Home">
+            <span class="logo-text">Aj</span>
+            <span class="logo-plus">+</span>
+        </a>
+
+        <nav class="main-nav home-nav" aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="portfolio.html">Portfolio</a>
+            <a href="services.html" aria-current="page">Services</a>
+            <a href="resources.html">Resources</a>
+            <a href="shop.html">Shop</a>
+        </nav>
+
+        <a href="contact.html" class="nav-button home-connect">Let's Connect</a>
+    </header>
+
+    <main>
+        <section class="inquiry-hero" aria-labelledby="request-service-heading">
+            <p class="inquiry-kicker">SERVICE INTAKE</p>
+            <h1 id="request-service-heading">Request a Service</h1>
+            <p>Tell me what you need help with and I'll recommend the best next step.</p>
+        </section>
+
+        <section class="inquiry-layout" aria-label="Service request form">
+            <article class="inquiry-form-card">
+                <h2>Service Intake Form</h2>
+                <p>Provide your goals, timeline, and preferred way to collaborate.</p>
+
+                <form class="inquiry-form" data-form-type="service" data-thank-you-type="service" novalidate>
+                    <input type="hidden" name="form_category" value="service_request">
+                    <input type="hidden" name="service_requested" value="">
+                    <input type="hidden" name="source_page" value="request-service.html">
+                    <div class="form-grid">
+                        <div class="field-group">
+                            <label for="service-name">Full Name *</label>
+                            <input id="service-name" name="fullName" type="text" required aria-required="true" autocomplete="name">
+                        </div>
+
+                        <div class="field-group">
+                            <label for="service-email">Email *</label>
+                            <input id="service-email" name="email" type="email" required aria-required="true" autocomplete="email">
+                        </div>
+
+                        <div class="field-group">
+                            <label for="service-phone">Phone</label>
+                            <input id="service-phone" name="phone" type="tel" autocomplete="tel">
+                        </div>
+
+                        <div class="field-group">
+                            <label for="service-company">Company / Organization</label>
+                            <input id="service-company" name="companyOrganization" type="text">
+                        </div>
+
+                        <div class="field-group field-group-full">
+                            <label for="service-website">Website or LinkedIn URL</label>
+                            <input id="service-website" name="websiteOrLinkedin" type="url" placeholder="https://">
+                        </div>
+
+                        <div class="field-group">
+                            <label for="service-requested">Service Requested *</label>
+                            <select id="service-requested" name="serviceRequested" required aria-required="true">
+                                <option value="">Select a service</option>
+                                <option value="computer-science-tutoring">Computer Science Tutoring</option>
+                                <option value="math-tutoring">Math Tutoring</option>
+                                <option value="networking-coaching">Networking Coaching</option>
+                                <option value="resume-quick-scan">Resume Quick Scan</option>
+                                <option value="project-direction-check">Project Direction Check</option>
+                                <option value="resume-review">Resume Review</option>
+                                <option value="linkedin-optimization">LinkedIn Optimization</option>
+                                <option value="interview-prep">Interview Preparation</option>
+                                <option value="portfolio-website">Portfolio Website</option>
+                                <option value="workflow-automation">Workflow Automation Planning</option>
+                                <option value="analytics-dashboards">Analytics &amp; Dashboards</option>
+                                <option value="community-talk">Community Talk</option>
+                                <option value="workshop">Workshop</option>
+                                <option value="sports-training">Sports Training Programming</option>
+                                <option value="fitness-accountability">Fitness Accountability Coaching</option>
+                                <option value="personal-accountability">Personal Accountability Coaching</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="service-budget">Budget Range *</label>
+                            <select id="service-budget" name="budgetRange" required aria-required="true">
+                                <option value="">Select budget</option>
+                                <option value="Free starting point">Free starting point</option>
+                                <option value="Under $50">Under $50</option>
+                                <option value="$50-$100">$50-$100</option>
+                                <option value="$100-$250">$100-$250</option>
+                                <option value="$250-$500">$250-$500</option>
+                                <option value="$500+">$500+</option>
+                                <option value="Not sure yet">Not sure yet</option>
+                            </select>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="service-timeline">Timeline *</label>
+                            <select id="service-timeline" name="timeline" required aria-required="true">
+                                <option value="">Select timeline</option>
+                                <option value="ASAP">ASAP</option>
+                                <option value="This week">This week</option>
+                                <option value="2-3 weeks">2-3 weeks</option>
+                                <option value="This month">This month</option>
+                                <option value="Flexible">Flexible</option>
+                            </select>
+                        </div>
+
+                        <div class="field-group">
+                            <label for="meeting-method">Preferred Meeting Method *</label>
+                            <select id="meeting-method" name="preferredMeetingMethod" required aria-required="true">
+                                <option value="">Select method</option>
+                                <option value="Email">Email</option>
+                                <option value="Google Meet">Google Meet</option>
+                                <option value="Phone">Phone</option>
+                                <option value="No meeting needed yet">No meeting needed yet</option>
+                            </select>
+                        </div>
+
+                        <div class="field-group field-group-full">
+                            <label for="project-description">Project Description *</label>
+                            <textarea id="project-description" name="projectDescription" required aria-required="true"></textarea>
+                        </div>
+
+                        <div class="field-group field-group-full">
+                            <label for="upload-link">Upload Link / File Link</label>
+                            <input id="upload-link" name="uploadLink" type="url" placeholder="https://">
+                            <span class="helper-text">Share Google Drive, Dropbox, GitHub, or another accessible link.</span>
+                        </div>
+
+                        <div class="field-group field-group-full">
+                            <label for="service-notes">Anything else I should know?</label>
+                            <textarea id="service-notes" name="additionalNotes"></textarea>
+                        </div>
+                    </div>
+
+                    <p class="form-feedback" data-form-error role="alert" aria-live="polite"></p>
+
+                    <div class="form-actions">
+                        <button type="submit" class="button primary-button" data-submit-label="Submit Request">Submit Request</button>
+                    </div>
+                </form>
+            </article>
+
+            <aside class="inquiry-side-card" aria-label="Service guidance">
+                <h2>Need Help Choosing?</h2>
+                <p>If you're unsure which service fits best, start with the option closest to your goal and I will refine scope with you.</p>
+                <ul class="quick-link-list">
+                    <li><a href="services.html">Back to Services Overview</a></li>
+                    <li><a href="https://calendar.app.google/VMVWfWRDWMRHh68Q6" target="_blank" rel="noopener noreferrer">Book a Consultation</a></li>
+                    <li><a href="launch-promotion.html">Apply for Launch Promotion</a></li>
+                    <li><a href="contact.html">General Contact</a></li>
+                </ul>
+            </aside>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2026 Anngel Jacobs. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="https://www.linkedin.com/in/anngel-j-807340393" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="https://github.com/ajacobscsgit" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="docs/resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+            <a href="mailto:resume@anngelj.com">Email</a>
+            <a href="contact.html">Let's Connect &rarr;</a>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/forms.js"></script>
+</body>
+</html>
