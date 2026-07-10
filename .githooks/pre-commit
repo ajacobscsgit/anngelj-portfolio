@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+
+# Block commits that include common secret patterns in staged changes.
+STAGED_DIFF=$(git diff --cached --no-color -- . ":(exclude)js/public-config.js" ":(exclude)js/public-config.example.js" ":(exclude).githooks/pre-commit")
+ADDED_LINES=$(printf "%s\n" "$STAGED_DIFF" | grep -E '^\+' | grep -Ev '^\+\+\+')
+
+if [ -z "$ADDED_LINES" ]; then
+  exit 0
+fi
+
+PATTERN='(eyJhbGci[[:alnum:]_.-]{20,}|sk_live_[[:alnum:]_]+|sk_test_[[:alnum:]_]+|whsec_[[:alnum:]_]+|SUPABASE_SERVICE_ROLE_KEY[[:space:]]*[:=][[:space:]]*[[:graph:]]+|STRIPE_SECRET_KEY[[:space:]]*[:=][[:space:]]*[[:graph:]]+|STRIPE_WEBHOOK_SECRET[[:space:]]*[:=][[:space:]]*[[:graph:]]+)'
+
+printf "%s\n" "$ADDED_LINES" | grep -E -q "$PATTERN"
+if [ $? -eq 0 ]; then
+  echo ""
+  echo "[pre-commit] Potential secret detected in staged changes. Commit blocked."
+  echo "Review with: git diff --cached"
+  echo "If this is intentional test data, remove it or rotate it before committing."
+  exit 1
+fi
+
+exit 0

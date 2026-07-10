@@ -18,6 +18,10 @@
     }
 
     let discountRate = 0;
+    const PUBLIC_CONFIG = window.AJ_PUBLIC_CONFIG || {};
+    const SUPABASE_URL = String(PUBLIC_CONFIG.SUPABASE_URL || "").trim();
+    const SUPABASE_ANON_KEY = String(PUBLIC_CONFIG.SUPABASE_ANON_KEY || "").trim();
+    const hasSupabaseConfig = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 
     const render = () => {
         const { lines, subtotal, estimatedTax, total } = ShopCore.getCartTotals();
@@ -62,35 +66,47 @@
             return;
         }
 
-        checkoutBtn.disabled = true;
-        checkoutBtn.textContent = "Redirecting...";
+        if (!hasSupabaseConfig) {
+            alert("Checkout is temporarily unavailable. Missing public checkout configuration.");
+            return;
+        }
 
-        const base = ShopCore.getCheckoutApiBase();
-        const payload = {
-            items: lines.map((line) => ({
-                id: line.product.id,
-                quantity: line.quantity
-            })),
-            successUrl: `${window.location.origin}/success.html`,
-            cancelUrl: `${window.location.origin}/cart.html`
-        };
+        checkoutBtn.disabled = true;
+        checkoutBtn.textContent = "Opening secure checkout...";
+
+        const cart = lines.map((line) => ({
+            productId: line.product.id,
+            quantity: line.quantity
+        }));
 
         try {
-            const response = await fetch(`${base}/api/create-checkout-session`, {
+            const response = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
+                headers: {
+                    "Content-Type": "application/json",
+                    apikey: SUPABASE_ANON_KEY,
+                    Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+                },
+                body: JSON.stringify({
+                    cart
+                })
             });
-            const data = await response.json();
 
-            if (!response.ok || !data.url) {
-                throw new Error(data.error || "Unable to checkout");
+            const result = await response.json().catch(() => ({}));
+
+            if (!response.ok) {
+                throw new Error(result.error || result.message || "Checkout could not be started.");
             }
 
-            sessionStorage.setItem("aj-last-order", JSON.stringify(payload.items));
-            window.location.href = data.url;
+            if (!result.checkoutUrl) {
+                throw new Error("No checkout URL was returned.");
+            }
+
+            sessionStorage.setItem("aj-last-order", JSON.stringify(cart));
+            window.location.href = result.checkoutUrl;
         } catch (error) {
-            alert("Checkout is not available yet. Start the local Stripe backend and try again.");
+            console.error("Checkout error:", error);
+            alert(error instanceof Error ? error.message : "Checkout could not be started.");
         } finally {
             checkoutBtn.disabled = false;
             checkoutBtn.textContent = "Checkout";

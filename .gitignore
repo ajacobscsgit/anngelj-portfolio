@@ -4,6 +4,11 @@
 .env.development
 .env.production
 .env*.local
+**/.env
+**/.env.*
+
+# Public runtime config (contains publishable keys)
+js/public-config.js
 
 # Stripe / Supabase secrets
 *.key

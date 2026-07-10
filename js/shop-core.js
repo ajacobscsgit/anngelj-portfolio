@@ -1,6 +1,7 @@
 (() => {
-    const CART_KEY = "aj-shop-cart-v1";
+    const CART_KEY = "shopCart";
     const CHECKOUT_URL_KEY = "AJ_CHECKOUT_API_BASE";
+    const MAX_CART_ITEM_QUANTITY = 10;
     let runtimeProducts = Array.isArray(window.SHOP_PRODUCTS) ? window.SHOP_PRODUCTS : [];
 
     const toCurrency = (value) => {
@@ -34,16 +35,43 @@
             if (!Array.isArray(parsed)) {
                 return [];
             }
-            return parsed
-                .map((entry) => ({ id: String(entry.id || ""), quantity: Math.max(1, Number(entry.quantity || 1)) }))
+
+            const normalized = parsed
+                .map((entry) => ({
+                    id: String(entry.productId || entry.id || ""),
+                    quantity: Math.max(1, Math.min(MAX_CART_ITEM_QUANTITY, Number(entry.quantity || 1)))
+                }))
                 .filter((entry) => entry.id);
+
+            const merged = new Map();
+            normalized.forEach((entry) => {
+                const existing = merged.get(entry.id) || 0;
+                merged.set(entry.id, Math.min(MAX_CART_ITEM_QUANTITY, existing + entry.quantity));
+            });
+
+            return Array.from(merged.entries()).map(([id, quantity]) => ({ id, quantity }));
         } catch (error) {
             return [];
         }
     };
 
     const writeCart = (items) => {
-        localStorage.setItem(CART_KEY, JSON.stringify(items));
+        const normalized = Array.isArray(items)
+            ? items.map((entry) => ({
+                productId: String(entry.id || entry.productId || ""),
+                quantity: Math.max(1, Math.min(MAX_CART_ITEM_QUANTITY, Number(entry.quantity || 1)))
+            })).filter((entry) => entry.productId)
+            : [];
+
+        const merged = new Map();
+        normalized.forEach((entry) => {
+            const existing = merged.get(entry.productId) || 0;
+            merged.set(entry.productId, Math.min(MAX_CART_ITEM_QUANTITY, existing + entry.quantity));
+        });
+
+        const compact = Array.from(merged.entries()).map(([productId, quantity]) => ({ productId, quantity }));
+
+        localStorage.setItem(CART_KEY, JSON.stringify(compact));
         window.dispatchEvent(new CustomEvent("shop:cart-updated", { detail: items }));
     };
 
@@ -56,9 +84,9 @@
         const items = readCart();
         const existing = items.find((entry) => entry.id === productId);
         if (existing) {
-            existing.quantity += quantity;
+            existing.quantity = Math.min(MAX_CART_ITEM_QUANTITY, existing.quantity + quantity);
         } else {
-            items.push({ id: productId, quantity: Math.max(1, quantity) });
+            items.push({ id: productId, quantity: Math.max(1, Math.min(MAX_CART_ITEM_QUANTITY, quantity)) });
         }
         writeCart(items);
     };
@@ -73,7 +101,7 @@
         if (quantity <= 0) {
             items.splice(index, 1);
         } else {
-            items[index].quantity = quantity;
+            items[index].quantity = Math.min(MAX_CART_ITEM_QUANTITY, quantity);
         }
 
         writeCart(items);

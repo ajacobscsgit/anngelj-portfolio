@@ -30,7 +30,7 @@
     const cartTax = document.querySelector("[data-cart-tax]");
     const cartTotal = document.querySelector("[data-cart-total]");
     const cartCountBadges = document.querySelectorAll("[data-cart-count]");
-    const checkoutBtn = document.querySelector("[data-checkout]");
+    const checkoutBtn = document.querySelector("[data-checkout-button]");
     const priceFilters = Array.from(document.querySelectorAll('input[name="price-filter"]'));
     const typeFilters = Array.from(document.querySelectorAll('input[name="type-filter"]'));
     const ratingFilters = Array.from(document.querySelectorAll('input[name="rating-filter"]'));
@@ -90,8 +90,9 @@
     const collections = window.SHOP_COLLECTIONS || {};
     let products = ShopCore.getProducts();
     const sharedReviewApiBase = ShopCore.getReviewApiBase();
-    const SUPABASE_URL = "https://zyoozdgdiwopgwstiugu.supabase.co".trim();
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5b296ZGdkaXdvcGd3c3RpdWd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMzAyNDMsImV4cCI6MjA5MzYwNjI0M30.T32uwCGaZo1YkqzIaRN_7eyjzPshXdmcHPFDdM7MH7w".trim();
+    const PUBLIC_CONFIG = window.AJ_PUBLIC_CONFIG || {};
+    const SUPABASE_URL = String(PUBLIC_CONFIG.SUPABASE_URL || "").trim();
+    const SUPABASE_ANON_KEY = String(PUBLIC_CONFIG.SUPABASE_ANON_KEY || "").trim();
     const hasSupabaseConfig = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
     const supabaseClient = hasSupabaseConfig && window.supabase && typeof window.supabase.createClient === "function"
         ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -108,7 +109,7 @@
         })
         : null;
     const hasSupabaseClient = Boolean(supabaseClient);
-    const featuredIds = new Set(products.filter((item) => item.featuredSale).map((item) => item.id));
+    const isFeaturedProduct = (item) => Boolean(item && item.featuredSale);
     const categoryOrder = ["all", ...Object.keys(collections)];
     const categoryIcons = {
         study: "📚",
@@ -154,49 +155,122 @@
 
     const mapApiProduct = (entry) => {
         const id = String(entry.id || "").trim();
-        const title = String(entry.title || "Digital Product").trim();
-        const description = String(entry.description || "Premium digital resource.").trim();
-        const category = String(entry.category || "creator").trim() || "creator";
-        const unitAmount = Math.max(0, Number(entry.unit_amount || 0));
-        const price = Number((unitAmount / 100).toFixed(2));
-        const metadata = entry.metadata && typeof entry.metadata === "object" ? entry.metadata : {};
-        const productType = String(metadata.productType || metadata.product_type || "template");
-        const fileFormat = String(metadata.fileFormat || metadata.file_format || "PDF");
-        const includes = Array.isArray(metadata.includes)
-            ? metadata.includes.map((item) => String(item))
-            : ["Download file", "Quick-start guide"];
+        const title = String(entry.name || "Digital Product").trim();
+        const description = String(
+            entry.description || "Premium digital resource."
+        ).trim();
+
+        const category = String(entry.category || "creator").trim();
+        const priceCents = Math.max(0, Number(entry.price_cents ?? 0));
+        const compareAtPriceCents = Math.max(
+            0,
+            Number(entry.compare_at_price_cents ?? 0)
+        );
+
+        const price = Number((priceCents / 100).toFixed(2));
+        const compareAtPrice = Number(
+            (compareAtPriceCents / 100).toFixed(2)
+        );
+
+        const salePrice = compareAtPrice > price ? price : undefined;
+        const displayPrice = compareAtPrice > price
+            ? compareAtPrice
+            : price;
+
+        const categoryMap = {
+            "Study & University": "study",
+            "Computer Science & Programming": "cs",
+            "Business & Analytics": "analytics",
+            "Career": "career",
+            "Faith & Reflection": "faith",
+            "Health & Lifestyle": "health",
+            "Digital Creator Resources": "creator"
+        };
+
+        const categoryKey =
+            categoryMap[category] || category.toLowerCase();
 
         return {
             id,
             title,
-            category,
+            slug: String(entry.slug || "").trim(),
+            category: categoryKey,
             description,
-            price,
+            price: displayPrice,
+            salePrice,
             free: price === 0,
-            isNew: false,
-            rating: 4.8,
+            isNew: Boolean(entry.is_new),
+            rating: 0,
             reviewCount: 0,
-            createdAt: new Date().toISOString(),
-            collectionLabel: collections[category] || "General",
-            productType,
-            fileFormat,
-            readingTime: String(metadata.readingTime || metadata.reading_time || "20 min read"),
+            createdAt: entry.created_at || new Date().toISOString(),
+            collectionLabel: category,
+            productType: String(entry.product_type || "digital"),
+            fileFormat: String(entry.file_format || "PDF"),
             instantDownload: true,
-            lifetimeUpdates: Boolean(metadata.lifetimeUpdates || metadata.lifetime_updates),
-            isBundle: Boolean(metadata.isBundle || metadata.is_bundle),
-            includes,
-            creator: String(metadata.creator || "Created by Anngel Jacobs")
+            lifetimeUpdates: Boolean(entry.lifetime_updates),
+            isBundle: Boolean(entry.is_bundle),
+            featuredSale: Boolean(
+                entry.is_featured || entry.is_best_seller
+            ),
+            recentlyUpdated: false,
+            includes: ["Instant download", entry.file_format || "Digital file"],
+            creator: "Created by Anngel Jacobs"
         };
     };
 
     const loadProducts = async () => {
         try {
+            if (hasSupabaseClient) {
+                const { data, error } = await supabaseClient
+                    .from("products")
+                    .select(`
+    id,
+    name,
+    slug,
+    description,
+    category,
+    active,
+    price_cents,
+    compare_at_price_cents,
+    currency,
+    image_url,
+    product_type,
+    file_format,
+    is_bundle,
+    is_featured,
+    is_new,
+    is_best_seller,
+    lifetime_updates,
+    created_at
+`)
+                    .eq("active", true)
+                    .order("name", { ascending: true });
+
+                if (error) {
+                    throw new Error(error.message || "Unable to load products.");
+                }
+
+                const loadedProducts = (Array.isArray(data) ? data : [])
+                    .map(mapApiProduct)
+                    .filter((product) => product.id && product.title);
+
+                if (loadedProducts.length > 0) {
+                    products = loadedProducts;
+                    ShopCore.setProducts(loadedProducts);
+                    renderSidebarSummary();
+                    renderRecentlyViewed();
+                    renderProducts();
+                    updateCartSummary();
+                }
+
+                return;
+            }
+
             const base = ShopCore.getCheckoutApiBase();
             const response = await fetch(`${base}/api/products`);
             if (!response.ok) {
                 throw new Error("Unable to load products.");
             }
-
             const payload = await response.json();
             if (!Array.isArray(payload.products)) {
                 throw new Error("Invalid products payload.");
@@ -214,10 +288,83 @@
                 renderProducts();
                 updateCartSummary();
             }
-        } catch (_error) {
-            // Keep static products as fallback when backend products are unavailable.
+        } catch (error) {
+            console.error("Supabase product loading failed:", error);
+            alert(
+                "The shop catalog could not load. Please refresh and try again."
+            );
         }
     };
+
+    async function checkoutCart(cart) {
+        const checkoutButton = document.querySelector("[data-checkout-button]");
+
+        if (!Array.isArray(cart) || cart.length === 0) {
+            alert("Your cart is empty.");
+            return;
+        }
+
+        if (!hasSupabaseConfig) {
+            alert("Checkout is temporarily unavailable. Missing public checkout configuration.");
+            return;
+        }
+
+        const merged = new Map();
+        cart.forEach((item) => {
+            const productId = String(item.productId || item.id || "").trim();
+            if (!productId) {
+                return;
+            }
+            const quantity = Math.max(1, Math.min(10, Number(item.quantity || 1)));
+            const existing = merged.get(productId) || 0;
+            merged.set(productId, Math.min(10, existing + quantity));
+        });
+
+        const normalizedCart = Array.from(merged.entries()).map(([productId, quantity]) => ({ productId, quantity }));
+        if (normalizedCart.length === 0) {
+            alert("Your cart is empty.");
+            return;
+        }
+
+        try {
+            if (checkoutButton) {
+                checkoutButton.disabled = true;
+                checkoutButton.textContent = "Opening checkout...";
+            }
+
+            const response = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    apikey: SUPABASE_ANON_KEY,
+                    Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+                },
+                body: JSON.stringify({
+                    cart: normalizedCart
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || "Checkout could not be started.");
+            }
+
+            if (!result.checkoutUrl) {
+                throw new Error("No Stripe checkout URL was returned.");
+            }
+
+            window.location.href = result.checkoutUrl;
+        } catch (error) {
+            console.error(error);
+            alert(error instanceof Error ? error.message : "Checkout could not be started.");
+        } finally {
+            if (checkoutButton) {
+                checkoutButton.disabled = false;
+                checkoutButton.textContent = "Secure Checkout";
+            }
+        }
+    }
 
     const mapSupabaseReview = (entry) => {
         if (!entry) {
@@ -539,7 +686,7 @@
         if (state.sort === "price-asc") return copy.sort((a, b) => priceOf(a) - priceOf(b));
         if (state.sort === "price-desc") return copy.sort((a, b) => priceOf(b) - priceOf(a));
         if (state.sort === "title-asc") return copy.sort((a, b) => a.title.localeCompare(b.title));
-        return copy.sort((a, b) => Number(featuredIds.has(b.id)) - Number(featuredIds.has(a.id)));
+        return copy.sort((a, b) => Number(isFeaturedProduct(b)) - Number(isFeaturedProduct(a)));
     };
 
     const groupByCategory = (list) => {
@@ -808,45 +955,9 @@
     };
 
     const startCheckout = async () => {
-        const lines = ShopCore.getCartLines();
-        if (lines.length === 0) {
-            alert("Your cart is empty.");
-            return;
-        }
-
-        checkoutBtn.disabled = true;
-        checkoutBtn.textContent = "Redirecting...";
-
-        const base = ShopCore.getCheckoutApiBase();
-        const payload = {
-            items: lines.map((line) => ({
-                id: line.product.id,
-                quantity: line.quantity
-            })),
-            successUrl: `${window.location.origin}/success.html`,
-            cancelUrl: `${window.location.origin}/cart.html`
-        };
-
-        try {
-            const response = await fetch(`${base}/api/create-checkout-session`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            });
-            const data = await response.json();
-
-            if (!response.ok || !data.url) {
-                throw new Error(data.error || "Unable to start checkout.");
-            }
-
-            sessionStorage.setItem("aj-last-order", JSON.stringify(payload.items));
-            window.location.href = data.url;
-        } catch (_error) {
-            alert("Checkout is not available yet. Start the local Stripe backend and try again.");
-        } finally {
-            checkoutBtn.disabled = false;
-            checkoutBtn.textContent = "Checkout";
-        }
+        const cart = JSON.parse(localStorage.getItem("shopCart") || "[]");
+        sessionStorage.setItem("aj-last-order", JSON.stringify(cart));
+        await checkoutCart(cart);
     };
 
     const submitReview = async (form) => {
@@ -1158,7 +1269,16 @@
         });
     }
 
-    checkoutBtn.addEventListener("click", startCheckout);
+    const checkoutButton = document.querySelector("[data-checkout-button]");
+    checkoutButton?.addEventListener("click", () => {
+        const cart = JSON.parse(localStorage.getItem("shopCart") || "[]");
+        sessionStorage.setItem("aj-last-order", JSON.stringify(cart));
+        checkoutCart(cart);
+    });
+
+    if (checkoutBtn && checkoutBtn !== checkoutButton) {
+        checkoutBtn.addEventListener("click", startCheckout);
+    }
 
     if (reviewModal) {
         reviewModal.addEventListener("click", (event) => {
