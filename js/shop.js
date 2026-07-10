@@ -6,7 +6,6 @@
 
     const WISHLIST_KEY = "aj-shop-wishlist-v1";
     const RECENT_KEY = "aj-shop-recent-v1";
-    const REVIEW_KEY = "aj-shop-reviews-v1";
     const CONFETTI_KEY = "aj-shop-confetti-session";
 
     const grid = document.getElementById("shop-grid");
@@ -89,8 +88,26 @@
     };
 
     const collections = window.SHOP_COLLECTIONS || {};
-    const products = ShopCore.getProducts();
-    const reviewApiBase = ShopCore.getCheckoutApiBase();
+    let products = ShopCore.getProducts();
+    const sharedReviewApiBase = ShopCore.getReviewApiBase();
+    const SUPABASE_URL = "https://zyoozdgdiwopgwstiugu.supabase.co".trim();
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp5b296ZGdkaXdvcGd3c3RpdWd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMzAyNDMsImV4cCI6MjA5MzYwNjI0M30.T32uwCGaZo1YkqzIaRN_7eyjzPshXdmcHPFDdM7MH7w".trim();
+    const hasSupabaseConfig = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
+    const supabaseClient = hasSupabaseConfig && window.supabase && typeof window.supabase.createClient === "function"
+        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+                persistSession: false,
+                autoRefreshToken: false
+            },
+            global: {
+                headers: {
+                    apikey: SUPABASE_ANON_KEY,
+                    Authorization: `Bearer ${SUPABASE_ANON_KEY}`
+                }
+            }
+        })
+        : null;
+    const hasSupabaseClient = Boolean(supabaseClient);
     const featuredIds = new Set(products.filter((item) => item.featuredSale).map((item) => item.id));
     const categoryOrder = ["all", ...Object.keys(collections)];
     const categoryIcons = {
@@ -133,50 +150,129 @@
         }
     ];
 
-    const getStoredReviews = () => {
+    let serverReviews = [];
+
+    const mapApiProduct = (entry) => {
+        const id = String(entry.id || "").trim();
+        const title = String(entry.title || "Digital Product").trim();
+        const description = String(entry.description || "Premium digital resource.").trim();
+        const category = String(entry.category || "creator").trim() || "creator";
+        const unitAmount = Math.max(0, Number(entry.unit_amount || 0));
+        const price = Number((unitAmount / 100).toFixed(2));
+        const metadata = entry.metadata && typeof entry.metadata === "object" ? entry.metadata : {};
+        const productType = String(metadata.productType || metadata.product_type || "template");
+        const fileFormat = String(metadata.fileFormat || metadata.file_format || "PDF");
+        const includes = Array.isArray(metadata.includes)
+            ? metadata.includes.map((item) => String(item))
+            : ["Download file", "Quick-start guide"];
+
+        return {
+            id,
+            title,
+            category,
+            description,
+            price,
+            free: price === 0,
+            isNew: false,
+            rating: 4.8,
+            reviewCount: 0,
+            createdAt: new Date().toISOString(),
+            collectionLabel: collections[category] || "General",
+            productType,
+            fileFormat,
+            readingTime: String(metadata.readingTime || metadata.reading_time || "20 min read"),
+            instantDownload: true,
+            lifetimeUpdates: Boolean(metadata.lifetimeUpdates || metadata.lifetime_updates),
+            isBundle: Boolean(metadata.isBundle || metadata.is_bundle),
+            includes,
+            creator: String(metadata.creator || "Created by Anngel Jacobs")
+        };
+    };
+
+    const loadProducts = async () => {
         try {
-            const parsed = JSON.parse(localStorage.getItem(REVIEW_KEY) || "[]");
-            return Array.isArray(parsed) ? parsed : [];
+            const base = ShopCore.getCheckoutApiBase();
+            const response = await fetch(`${base}/api/products`);
+            if (!response.ok) {
+                throw new Error("Unable to load products.");
+            }
+
+            const payload = await response.json();
+            if (!Array.isArray(payload.products)) {
+                throw new Error("Invalid products payload.");
+            }
+
+            const loadedProducts = payload.products
+                .map(mapApiProduct)
+                .filter((product) => product.id && product.title);
+
+            if (loadedProducts.length > 0) {
+                products = loadedProducts;
+                ShopCore.setProducts(loadedProducts);
+                renderSidebarSummary();
+                renderRecentlyViewed();
+                renderProducts();
+                updateCartSummary();
+            }
         } catch (_error) {
-            return [];
+            // Keep static products as fallback when backend products are unavailable.
         }
     };
 
-    const saveStoredReviews = (reviews) => {
-        localStorage.setItem(REVIEW_KEY, JSON.stringify(reviews));
+    const mapSupabaseReview = (entry) => {
+        if (!entry) {
+            return null;
+        }
+
+        return {
+            id: entry.id,
+            name: entry.name,
+            title: entry.title,
+            body: entry.body,
+            rating: Number(entry.rating) || 5,
+            createdAt: entry.created_at || new Date().toISOString(),
+            source: entry.source || "user"
+        };
     };
 
-    const syncReviewsFromServer = async () => {
+    const loadReviews = async () => {
         try {
-            const response = await fetch(`${reviewApiBase}/api/reviews`);
-            if (!response.ok) {
-                return;
-            }
+            if (hasSupabaseClient) {
+                const { data: rows, error } = await supabaseClient
+                    .from("reviews")
+                    .select("id,name,title,body,rating,created_at,source,is_public")
+                    .eq("is_public", true)
+                    .order("created_at", { ascending: false })
+                    .limit(500);
 
-            const data = await response.json();
-            if (Array.isArray(data.reviews)) {
-                const localReviews = getStoredReviews();
-                const merged = [...data.reviews, ...localReviews].reduce((list, review) => {
-                    if (!review || !review.id) {
-                        return list;
-                    }
-                    if (!list.some((entry) => entry.id === review.id)) {
-                        list.push(review);
-                    }
-                    return list;
-                }, []);
-                saveStoredReviews(merged);
-                renderReviewSummary();
-                renderFeaturedReviewCards();
-                renderAllReviewsList();
+                if (error) {
+                    throw new Error(error.message || "Unable to load Supabase reviews.");
+                }
+
+                serverReviews = Array.isArray(rows)
+                    ? rows.map(mapSupabaseReview).filter(Boolean)
+                    : [];
+            } else {
+                const response = await fetch(`${sharedReviewApiBase}/api/reviews`);
+                if (!response.ok) {
+                    throw new Error("Unable to load reviews.");
+                }
+
+                const data = await response.json();
+                serverReviews = Array.isArray(data.reviews) ? data.reviews.filter(Boolean) : [];
             }
+            renderReviewSummary();
+            renderFeaturedReviewCards();
+            renderAllReviewsList();
         } catch (_error) {
-            // Keep the local cache if the backend is not available.
+            renderReviewSummary();
+            renderFeaturedReviewCards();
+            renderAllReviewsList();
         }
     };
 
     const getAllReviews = () => {
-        return [...defaultReviews, ...getStoredReviews()].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        return [...defaultReviews, ...serverReviews].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     };
 
     const toStarString = (rating) => {
@@ -725,9 +821,7 @@
         const payload = {
             items: lines.map((line) => ({
                 id: line.product.id,
-                title: line.product.title,
-                quantity: line.quantity,
-                unitAmount: Math.round(line.unitPrice * 100)
+                quantity: line.quantity
             })),
             successUrl: `${window.location.origin}/success.html`,
             cancelUrl: `${window.location.origin}/cart.html`
@@ -774,57 +868,60 @@
             submitButton.textContent = "Submitting...";
         }
 
-        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        try {
+            let createdReview = null;
 
-        const review = {
-            id: `review-${Date.now()}`,
-            name,
-            title,
-            body,
-            rating,
-            createdAt: new Date().toISOString(),
-            source: "user"
-        };
+            if (hasSupabaseClient) {
+                const { data, error } = await supabaseClient
+                    .from("reviews")
+                    .insert({
+                        name,
+                        title,
+                        body,
+                        rating,
+                        source: "user",
+                        is_public: true
+                    })
+                    .select("id,name,title,body,rating,created_at,source")
+                    .single();
 
-        const storedReviews = getStoredReviews();
-        storedReviews.unshift(review);
-        saveStoredReviews(storedReviews);
+                if (error || !data) {
+                    throw new Error((error && error.message) || "Unable to submit review.");
+                }
 
-        renderReviewSummary();
-        renderFeaturedReviewCards();
-        renderAllReviewsList();
-
-        form.reset();
-        renderReviewStarsPicker(5);
-        closeReviewModal();
-        openAllReviewsModal();
-
-        void (async () => {
-            try {
-                const response = await fetch(`${reviewApiBase}/api/reviews`, {
+                createdReview = mapSupabaseReview(data);
+            } else {
+                const response = await fetch(`${sharedReviewApiBase}/api/reviews`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(review)
+                    body: JSON.stringify({ name, title, body, rating })
                 });
 
-                const data = await response.json();
-                if (response.ok && data.review) {
-                    const currentReviews = getStoredReviews();
-                    const mergedReviews = [data.review, ...currentReviews.filter((entry) => entry.id !== review.id)];
-                    saveStoredReviews(mergedReviews);
-                    renderReviewSummary();
-                    renderFeaturedReviewCards();
-                    renderAllReviewsList();
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok || !data.review) {
+                    throw new Error(data.error || "Unable to submit review.");
                 }
-            } catch (_error) {
-                // Keep the optimistic local review if the backend is unavailable.
-            } finally {
-                if (submitButton) {
-                    submitButton.disabled = false;
-                    submitButton.textContent = submitLabel;
-                }
+
+                createdReview = data.review;
             }
-        })();
+
+            serverReviews = [createdReview, ...serverReviews.filter((entry) => entry.id !== createdReview.id)];
+            renderReviewSummary();
+            renderFeaturedReviewCards();
+            renderAllReviewsList();
+
+            form.reset();
+            renderReviewStarsPicker(5);
+            closeReviewModal();
+            openAllReviewsModal();
+        } catch (error) {
+            alert(error.message || "Unable to submit review right now.");
+        } finally {
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = submitLabel;
+            }
+        }
     };
 
     const syncSort = (value, source) => {
@@ -1087,6 +1184,13 @@
     }
 
     window.addEventListener("shop:cart-updated", updateCartSummary);
+    window.addEventListener("shop:products-updated", (event) => {
+        products = Array.isArray(event.detail) ? event.detail : products;
+        renderSidebarSummary();
+        renderRecentlyViewed();
+        renderProducts();
+        updateCartSummary();
+    });
 
     renderCategoryFilters();
     renderSidebarSummary();
@@ -1097,6 +1201,7 @@
     renderFeaturedReviewCards();
     renderAllReviewsList();
     renderReviewStarsPicker(5);
-    syncReviewsFromServer();
+    loadReviews();
+    loadProducts();
     updateCartSummary();
 })();

@@ -69,9 +69,7 @@
         const payload = {
             items: lines.map((line) => ({
                 id: line.product.id,
-                title: line.product.title,
-                quantity: line.quantity,
-                unitAmount: Math.round(line.unitPrice * 100)
+                quantity: line.quantity
             })),
             successUrl: `${window.location.origin}/success.html`,
             cancelUrl: `${window.location.origin}/cart.html`

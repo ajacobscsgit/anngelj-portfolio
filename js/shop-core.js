@@ -1,13 +1,20 @@
 (() => {
     const CART_KEY = "aj-shop-cart-v1";
     const CHECKOUT_URL_KEY = "AJ_CHECKOUT_API_BASE";
+    let runtimeProducts = Array.isArray(window.SHOP_PRODUCTS) ? window.SHOP_PRODUCTS : [];
 
     const toCurrency = (value) => {
         const amount = Number(value || 0);
         return `$${amount.toFixed(2)}`;
     };
 
-    const getProducts = () => Array.isArray(window.SHOP_PRODUCTS) ? window.SHOP_PRODUCTS : [];
+    const getProducts = () => runtimeProducts;
+
+    const setProducts = (nextProducts) => {
+        runtimeProducts = Array.isArray(nextProducts) ? nextProducts : [];
+        window.SHOP_PRODUCTS = runtimeProducts;
+        window.dispatchEvent(new CustomEvent("shop:products-updated", { detail: runtimeProducts }));
+    };
 
     const findProductById = (id) => getProducts().find((item) => item.id === id) || null;
 
@@ -102,11 +109,18 @@
         return { lines, subtotal, estimatedTax, total };
     };
 
-    const getCheckoutApiBase = () => {
-        const fromStorage = localStorage.getItem(CHECKOUT_URL_KEY);
+    const resolveApiBase = (storageKey, fallbackBase) => {
+        const fromStorage = localStorage.getItem(storageKey);
         if (fromStorage) {
             return fromStorage;
         }
+
+        return fallbackBase;
+    };
+
+    const getCheckoutApiBase = () => resolveApiBase(CHECKOUT_URL_KEY, "http://localhost:4242");
+
+    const getReviewApiBase = () => {
         return "http://localhost:4242";
     };
 
@@ -118,6 +132,7 @@
         CART_KEY,
         toCurrency,
         getProducts,
+        setProducts,
         findProductById,
         getEffectivePrice,
         readCart,
@@ -129,6 +144,7 @@
         getCartLines,
         getCartTotals,
         getCheckoutApiBase,
+        getReviewApiBase,
         setCheckoutApiBase
     };
 })();

@@ -51,6 +51,8 @@ The portfolio now includes a complete digital download shop flow:
 
 A lightweight backend is included in `server/` to create Stripe Checkout Sessions.
 
+The same backend now also stores shop reviews in `server/reviews.json`, so reviews added on one device appear on every device that points to the same review API.
+
 1. `cd server`
 2. `npm install`
 3. Copy `.env.example` to `.env` and set `STRIPE_SECRET_KEY`

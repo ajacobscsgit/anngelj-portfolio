@@ -19,7 +19,11 @@ copy .env.example .env
 
 Then edit `.env`:
 
+- `SUPABASE_URL=https://your-project.supabase.co`
+- `SUPABASE_SERVICE_ROLE_KEY=ey...` (server-only secret)
 - `STRIPE_SECRET_KEY=sk_test_...`
+- `STRIPE_WEBHOOK_SECRET=whsec_...` (server-only secret)
+- `PUBLIC_SITE_URL=https://your-site`
 - Optionally set `ALLOWED_ORIGINS=http://127.0.0.1:5500,http://localhost:5500`
 
 ## 3) Run the backend
@@ -33,7 +37,19 @@ The checkout API will run at `http://localhost:4242`.
 ## Endpoints
 
 - `GET /health`
+- `GET /api/products`
 - `POST /api/create-checkout-session`
+- `GET /api/reviews`
+- `POST /api/reviews`
+- `POST /api/stripe/webhook`
+
+## Secure checkout flow
+
+- Frontend sends cart item IDs and quantities only.
+- Backend verifies product names and prices from `public.products` in Supabase.
+- Backend creates a Stripe Checkout Session using verified values.
+- Webhook marks orders paid in `public.orders` and `public.order_items`.
+- Digital delivery is enabled only after paid webhook confirmation.
 
 Request payload:
 
@@ -54,4 +70,7 @@ Response payload:
   "id": "cs_test_...",
   "url": "https://checkout.stripe.com/..."
 }
+
 ```
+
+Review payloads are stored in `reviews.json` in this folder, so the frontend can load the same review list for every visitor.
