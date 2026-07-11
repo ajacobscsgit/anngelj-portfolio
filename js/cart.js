@@ -19,8 +19,8 @@
 
     let discountRate = 0;
     const PUBLIC_CONFIG = window.AJ_PUBLIC_CONFIG || {};
-    const SUPABASE_URL = String(PUBLIC_CONFIG.SUPABASE_URL || "").trim();
-    const SUPABASE_ANON_KEY = String(PUBLIC_CONFIG.SUPABASE_ANON_KEY || "").trim();
+    const SUPABASE_URL = String(PUBLIC_CONFIG.supabaseUrl || PUBLIC_CONFIG.SUPABASE_URL || "").trim();
+    const SUPABASE_ANON_KEY = String(PUBLIC_CONFIG.supabaseAnonKey || PUBLIC_CONFIG.SUPABASE_ANON_KEY || "").trim();
     const hasSupabaseConfig = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 
     const render = () => {

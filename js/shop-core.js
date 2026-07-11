@@ -146,10 +146,17 @@
         return fallbackBase;
     };
 
-    const getCheckoutApiBase = () => resolveApiBase(CHECKOUT_URL_KEY, "http://localhost:4242");
+    const defaultApiBase = () => {
+        if (typeof window !== "undefined" && window.location && window.location.origin) {
+            return window.location.origin;
+        }
+        return "http://localhost:4242";
+    };
+
+    const getCheckoutApiBase = () => resolveApiBase(CHECKOUT_URL_KEY, defaultApiBase());
 
     const getReviewApiBase = () => {
-        return "http://localhost:4242";
+        return defaultApiBase();
     };
 
     const setCheckoutApiBase = (value) => {

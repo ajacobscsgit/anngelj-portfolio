@@ -18,6 +18,8 @@
     const freeOnly = document.getElementById("free-only");
     const saleOnly = document.getElementById("sale-only");
     const highestRated = document.getElementById("highest-rated");
+    const featuredOnly = document.getElementById("featured-only");
+    const bestSellerOnly = document.getElementById("best-seller-only");
     const bundlesOnly = document.getElementById("bundles-only");
     const recentOnly = document.getElementById("recent-only");
     const instantDownload = document.getElementById("instant-download");
@@ -65,6 +67,11 @@
     const previewPrice = document.querySelector("[data-preview-price]");
     const previewAdd = document.querySelector("[data-preview-add]");
     const previewBuy = document.querySelector("[data-preview-buy]");
+    const previewMiniStats = previewModal ? previewModal.querySelector(".shop-preview-mini-stats") : null;
+    const previewPagesSection = previewPages ? previewPages.closest(".shop-preview-section") : null;
+    const previewRelatedSection = previewRelated ? previewRelated.closest(".shop-preview-section") : null;
+    const previewPagesHeading = previewPagesSection ? previewPagesSection.querySelector("h3") : null;
+    const previewRelatedHeading = previewRelatedSection ? previewRelatedSection.querySelector("h3") : null;
 
     if (!grid || !searchInput || !sidebarSort || !toolbarSort || !categoryHost || !cartDrawer || !previewModal) {
         return;
@@ -80,19 +87,22 @@
         freeOnly: false,
         saleOnly: false,
         highestRated: false,
+        featuredOnly: false,
+        bestSellerOnly: false,
         bundlesOnly: false,
         recentOnly: false,
         instantDownload: false,
         lifetimeUpdates: false,
+        catalogNotice: "",
         previewProductId: null
     };
 
-    const collections = window.SHOP_COLLECTIONS || {};
+    const collections = Object.assign({}, window.SHOP_COLLECTIONS || {});
     let products = ShopCore.getProducts();
     const sharedReviewApiBase = ShopCore.getReviewApiBase();
     const PUBLIC_CONFIG = window.AJ_PUBLIC_CONFIG || {};
-    const SUPABASE_URL = String(PUBLIC_CONFIG.SUPABASE_URL || "").trim();
-    const SUPABASE_ANON_KEY = String(PUBLIC_CONFIG.SUPABASE_ANON_KEY || "").trim();
+    const SUPABASE_URL = String(PUBLIC_CONFIG.supabaseUrl || PUBLIC_CONFIG.SUPABASE_URL || "").trim();
+    const SUPABASE_ANON_KEY = String(PUBLIC_CONFIG.supabaseAnonKey || PUBLIC_CONFIG.SUPABASE_ANON_KEY || "").trim();
     const hasSupabaseConfig = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
     const supabaseClient = hasSupabaseConfig && window.supabase && typeof window.supabase.createClient === "function"
         ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -110,7 +120,7 @@
         : null;
     const hasSupabaseClient = Boolean(supabaseClient);
     const isFeaturedProduct = (item) => Boolean(item && item.featuredSale);
-    const categoryOrder = ["all", ...Object.keys(collections)];
+    let categoryOrder = ["all", ...Object.keys(collections)];
     const categoryIcons = {
         study: "📚",
         cs: "💻",
@@ -119,6 +129,145 @@
         faith: "🕌",
         health: "🏀",
         creator: "🎨"
+    };
+
+    const normalizeKey = (value) => String(value || "")
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
+    const canonicalCategoryKey = (value) => {
+        const key = normalizeKey(value);
+        const aliases = {
+            study: "study",
+            "study-university": "study",
+            "study-and-university": "study",
+            cs: "cs",
+            "computer-science": "cs",
+            "computer-science-programming": "cs",
+            "computer-science-and-programming": "cs",
+            analytics: "analytics",
+            "business-analytics": "analytics",
+            "business-and-analytics": "analytics",
+            career: "career",
+            faith: "faith",
+            "faith-reflection": "faith",
+            "faith-and-reflection": "faith",
+            health: "health",
+            "health-lifestyle": "health",
+            "health-and-lifestyle": "health",
+            creator: "creator",
+            "digital-creator-resources": "creator",
+            "digital-creators-resources": "creator"
+        };
+
+        return aliases[key] || key || "general";
+    };
+
+    const canonicalProductTypeKey = (value, isBundle) => {
+        if (isBundle) {
+            return "bundle";
+        }
+
+        const key = normalizeKey(value);
+        const aliases = {
+            planner: "planner",
+            planners: "planner",
+            guide: "guide",
+            guides: "guide",
+            workbook: "workbook",
+            workbooks: "workbook",
+            bundle: "bundle",
+            bundles: "bundle",
+            template: "template",
+            templates: "template"
+        };
+
+        return aliases[key] || key || "digital";
+    };
+
+    const toLabel = (value) => {
+        const raw = String(value || "").trim();
+        if (!raw) return "General";
+        return raw
+            .split(/[-_\s]+/)
+            .filter(Boolean)
+            .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1).toLowerCase())
+            .join(" ");
+    };
+
+    const toStringArray = (value) => {
+        if (Array.isArray(value)) {
+            return value.map((entry) => String(entry || "").trim()).filter(Boolean);
+        }
+
+        if (typeof value === "string") {
+            const trimmed = value.trim();
+            if (!trimmed) {
+                return [];
+            }
+
+            try {
+                const parsed = JSON.parse(trimmed);
+                if (Array.isArray(parsed)) {
+                    return parsed.map((entry) => String(entry || "").trim()).filter(Boolean);
+                }
+            } catch (_error) {
+                // Fall through to comma-separated parsing.
+            }
+
+            return trimmed.split(",").map((entry) => entry.trim()).filter(Boolean);
+        }
+
+        return [];
+    };
+
+    const toSafeUrl = (value) => {
+        const url = String(value || "").trim();
+        if (!url) {
+            return "";
+        }
+
+        if (/^(https?:)?\/\//i.test(url) || url.startsWith("/")) {
+            return url;
+        }
+
+        return "";
+    };
+
+    const getDiscountPercent = (item) => {
+        const original = Number(item.price || 0);
+        const current = Number(ShopCore.getEffectivePrice(item) || 0);
+        if (!(original > current && current >= 0)) {
+            return 0;
+        }
+
+        return Math.max(1, Math.round(((original - current) / original) * 100));
+    };
+
+    const toStarString = (rating) => {
+        const rounded = Math.max(0, Math.min(5, Math.round(Number(rating) || 0)));
+        return `${"★".repeat(rounded)}${"☆".repeat(5 - rounded)}`;
+    };
+
+    const syncCollectionsFromProducts = (list) => {
+        list.forEach((item) => {
+            if (!item || !item.category) {
+                return;
+            }
+
+            if (!collections[item.category]) {
+                collections[item.category] = item.collectionLabel || toLabel(item.category);
+            }
+        });
+
+        categoryOrder = ["all", ...Object.keys(collections)];
+    };
+
+    const renderCatalogNotice = (message) => {
+        state.catalogNotice = String(message || "").trim();
+        renderProducts();
     };
 
     const defaultReviews = [
@@ -153,68 +302,74 @@
 
     let serverReviews = [];
 
+    // Keep UI contract stable by mapping richer Supabase rows into existing product fields.
     const mapApiProduct = (entry) => {
-        const id = String(entry.id || "").trim();
-        const title = String(entry.name || "Digital Product").trim();
-        const description = String(
-            entry.description || "Premium digital resource."
-        ).trim();
+        const rawId = String(entry.id || "").trim();
+        const rawSlug = String(entry.slug || "").trim();
+        const id = rawId || rawSlug;
+        const title = String(entry.name || entry.title || "Digital Product").trim() || "Digital Product";
+        const subtitle = String(entry.subtitle || "").trim();
+        const shortDescription = String(entry.short_description || entry.description || "").trim();
+        const fullDescription = String(entry.description || shortDescription || "Premium digital resource.").trim();
+        const categoryLabel = String(entry.category || "General").trim() || "General";
+        const isBundle = Boolean(entry.is_bundle);
+        const category = canonicalCategoryKey(categoryLabel);
+        const productType = canonicalProductTypeKey(entry.product_type, isBundle);
+        const fileFormat = String(entry.file_format || "Digital").trim() || "Digital";
 
-        const category = String(entry.category || "creator").trim();
-        const priceCents = Math.max(0, Number(entry.price_cents ?? 0));
-        const compareAtPriceCents = Math.max(
-            0,
-            Number(entry.compare_at_price_cents ?? 0)
-        );
-
-        const price = Number((priceCents / 100).toFixed(2));
-        const compareAtPrice = Number(
-            (compareAtPriceCents / 100).toFixed(2)
-        );
-
-        const salePrice = compareAtPrice > price ? price : undefined;
-        const displayPrice = compareAtPrice > price
-            ? compareAtPrice
-            : price;
-
-        const categoryMap = {
-            "Study & University": "study",
-            "Computer Science & Programming": "cs",
-            "Business & Analytics": "analytics",
-            "Career": "career",
-            "Faith & Reflection": "faith",
-            "Health & Lifestyle": "health",
-            "Digital Creator Resources": "creator"
-        };
-
-        const categoryKey =
-            categoryMap[category] || category.toLowerCase();
+        const priceCents = Math.max(0, Number(entry.price_cents ?? entry.unit_amount ?? 0));
+        const compareAtPriceCents = Math.max(0, Number(entry.compare_at_price_cents ?? 0));
+        const currentPrice = Number((priceCents / 100).toFixed(2));
+        const compareAtPrice = Number((compareAtPriceCents / 100).toFixed(2));
+        const hasDiscount = compareAtPrice > currentPrice;
 
         return {
             id,
+            checkoutId: rawId || rawSlug,
+            slug: rawSlug,
             title,
-            slug: String(entry.slug || "").trim(),
-            category: categoryKey,
-            description,
-            price: displayPrice,
-            salePrice,
-            free: price === 0,
+            subtitle,
+            description: shortDescription || fullDescription,
+            fullDescription,
+            category,
+            collectionLabel: categoryLabel,
+            productType,
+            productTypeLabel: String(entry.product_type || "Digital").trim() || "Digital",
+            fileFormat,
+            fileSize: String(entry.file_size || "").trim(),
+            pageCount: Math.max(0, Number(entry.page_count || 0)),
+            price: hasDiscount ? compareAtPrice : currentPrice,
+            salePrice: hasDiscount ? currentPrice : undefined,
+            free: Boolean(entry.is_free) || currentPrice === 0,
+            isBundle,
+            isFeatured: Boolean(entry.is_featured),
             isNew: Boolean(entry.is_new),
-            rating: 0,
-            reviewCount: 0,
-            createdAt: entry.created_at || new Date().toISOString(),
-            collectionLabel: category,
-            productType: String(entry.product_type || "digital"),
-            fileFormat: String(entry.file_format || "PDF"),
-            instantDownload: true,
+            isBestSeller: Boolean(entry.is_best_seller),
+            featuredSale: Boolean(entry.is_featured || entry.is_best_seller),
+            instantDownload: Boolean(entry.instant_download),
             lifetimeUpdates: Boolean(entry.lifetime_updates),
-            isBundle: Boolean(entry.is_bundle),
-            featuredSale: Boolean(
-                entry.is_featured || entry.is_best_seller
-            ),
-            recentlyUpdated: false,
-            includes: ["Instant download", entry.file_format || "Digital file"],
-            creator: "Created by Anngel Jacobs"
+            rating: Number(entry.rating || 0),
+            reviewCount: Math.max(0, Number(entry.review_count || 0)),
+            tags: toStringArray(entry.tags),
+            features: toStringArray(entry.features),
+            includes: toStringArray(entry.included_items),
+            imageUrl: toSafeUrl(entry.image_url),
+            previewImages: toStringArray(entry.preview_images).map(toSafeUrl).filter(Boolean),
+            showcaseImages: toStringArray(entry.showcase_images).map(toSafeUrl).filter(Boolean),
+            ribbonText: String(entry.ribbon_text || "").trim(),
+            currency: String(entry.currency || "usd").trim().toLowerCase(),
+            createdAt: entry.created_at || new Date().toISOString(),
+            displayOrder: Number(entry.display_order || 0),
+            searchable: [
+                title,
+                subtitle,
+                shortDescription,
+                fullDescription,
+                categoryLabel,
+                String(entry.product_type || ""),
+                fileFormat,
+                ...toStringArray(entry.tags)
+            ].join(" ").toLowerCase()
         };
     };
 
@@ -227,24 +382,40 @@
     id,
     name,
     slug,
+    subtitle,
+    short_description,
     description,
+    display_order,
     category,
     active,
     price_cents,
     compare_at_price_cents,
     currency,
     image_url,
+    preview_images,
+    showcase_images,
     product_type,
     file_format,
+    file_size,
+    page_count,
+    tags,
+    features,
+    included_items,
+    ribbon_text,
+    rating,
+    review_count,
+    is_free,
     is_bundle,
     is_featured,
     is_new,
     is_best_seller,
+    instant_download,
     lifetime_updates,
     created_at
 `)
                     .eq("active", true)
-                    .order("name", { ascending: true });
+                    .order("display_order", { ascending: true })
+                    .order("created_at", { ascending: false });
 
                 if (error) {
                     throw new Error(error.message || "Unable to load products.");
@@ -255,15 +426,19 @@
                     .filter((product) => product.id && product.title);
 
                 if (loadedProducts.length > 0) {
+                    state.catalogNotice = "";
+                    syncCollectionsFromProducts(loadedProducts);
                     products = loadedProducts;
                     ShopCore.setProducts(loadedProducts);
+                    renderCategoryFilters();
                     renderSidebarSummary();
                     renderRecentlyViewed();
                     renderProducts();
                     updateCartSummary();
+                    return;
                 }
 
-                return;
+                throw new Error("No active products were returned from Supabase.");
             }
 
             const base = ShopCore.getCheckoutApiBase();
@@ -281,18 +456,33 @@
                 .filter((product) => product.id && product.title);
 
             if (loadedProducts.length > 0) {
+                state.catalogNotice = "Using development fallback catalog while Supabase is unavailable.";
+                syncCollectionsFromProducts(loadedProducts);
                 products = loadedProducts;
                 ShopCore.setProducts(loadedProducts);
+                renderCategoryFilters();
                 renderSidebarSummary();
                 renderRecentlyViewed();
                 renderProducts();
                 updateCartSummary();
+                return;
             }
+
+            throw new Error("No products were returned from the fallback endpoint.");
         } catch (error) {
             console.error("Supabase product loading failed:", error);
-            alert(
-                "The shop catalog could not load. Please refresh and try again."
-            );
+            if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+                renderCatalogNotice("Live catalog failed to load. Showing development fallback products.");
+                return;
+            }
+
+            products = [];
+            ShopCore.setProducts([]);
+            renderCategoryFilters();
+            renderSidebarSummary();
+            renderRecentlyViewed();
+            renderCatalogNotice("Catalog is temporarily unavailable. Please refresh and try again.");
+            updateCartSummary();
         }
     };
 
@@ -311,7 +501,9 @@
 
         const merged = new Map();
         cart.forEach((item) => {
-            const productId = String(item.productId || item.id || "").trim();
+            const rawId = String(item.productId || item.id || "").trim();
+            const mappedProduct = ShopCore.findProductById(rawId);
+            const productId = String(mappedProduct?.checkoutId || rawId).trim();
             if (!productId) {
                 return;
             }
@@ -420,11 +612,6 @@
 
     const getAllReviews = () => {
         return [...defaultReviews, ...serverReviews].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    };
-
-    const toStarString = (rating) => {
-        const rounded = Math.max(0, Math.min(5, Math.round(Number(rating) || 0)));
-        return `${"★".repeat(rounded)}${"☆".repeat(5 - rounded)}`;
     };
 
     const escapeHtml = (value) => String(value)
@@ -586,7 +773,7 @@
         if (typeof item.rating !== "number" || item.reviewCount <= 0) {
             return "★★★★★ (Coming soon)";
         }
-        return `★★★★★ (${item.reviewCount})`;
+        return `${toStarString(item.rating)} (${item.reviewCount})`;
     };
 
     const renderSidebarSummary = () => {
@@ -633,15 +820,21 @@
         if (item.free) badges.push('<span class="shop-badge shop-badge-free">Free</span>');
         if (item.isNew) badges.push('<span class="shop-badge shop-badge-new">New</span>');
         if (item.isBundle) badges.push('<span class="shop-badge shop-badge-bundle">Bundle</span>');
-        if (item.featuredSale) badges.push('<span class="shop-badge shop-badge-best">Best Seller</span>');
-        if (item.recentlyUpdated) badges.push('<span class="shop-badge shop-badge-updated">Recently Updated</span>');
-        if (typeof item.salePrice === "number") badges.push('<span class="shop-badge shop-badge-sale">50% OFF</span>');
+        if (item.isFeatured) badges.push('<span class="shop-badge shop-badge-best">Featured</span>');
+        if (item.isBestSeller) badges.push('<span class="shop-badge shop-badge-best">Best Seller</span>');
+        if (item.instantDownload) badges.push('<span class="shop-badge shop-badge-updated">Instant Download</span>');
+        if (item.lifetimeUpdates) badges.push('<span class="shop-badge shop-badge-updated">Lifetime Updates</span>');
+        if (typeof item.salePrice === "number") {
+            const pct = getDiscountPercent(item);
+            badges.push(`<span class="shop-badge shop-badge-sale">${pct}% OFF</span>`);
+        }
         return badges.join("");
     };
 
     const getProductHighlights = (item) => {
-        const highlights = ["Instant Download", item.fileFormat];
-        if (item.lifetimeUpdates) highlights.push("Lifetime Updates");
+        const highlights = [item.fileFormat];
+        if (item.pageCount > 0) highlights.push(`${item.pageCount} pages`);
+        if (Array.isArray(item.tags) && item.tags.length > 0) highlights.push(item.tags[0]);
         return highlights.map((label) => `<span>${label}</span>`).join("");
     };
 
@@ -661,7 +854,7 @@
 
     const filterProducts = () => products.filter((item) => {
         const query = state.search.trim().toLowerCase();
-        const searchable = `${item.title} ${item.description} ${item.collectionLabel} ${item.productType} ${item.fileFormat}`.toLowerCase();
+        const searchable = item.searchable || `${item.title} ${item.description} ${item.collectionLabel} ${item.productTypeLabel} ${item.fileFormat}`.toLowerCase();
 
         if (query && !searchable.includes(query)) return false;
         if (state.category !== "all" && item.category !== state.category) return false;
@@ -669,6 +862,8 @@
         if (!matchesPriceFilter(item) || !matchesRatingFilter(item)) return false;
         if (state.freeOnly && !item.free) return false;
         if (state.saleOnly && typeof item.salePrice !== "number") return false;
+        if (state.featuredOnly && !item.isFeatured) return false;
+        if (state.bestSellerOnly && !item.isBestSeller) return false;
         if (state.highestRated && !(typeof item.rating === "number" && item.rating >= 4.5)) return false;
         if (state.bundlesOnly && !item.isBundle) return false;
         if (state.recentOnly && !item.isNew) return false;
@@ -700,14 +895,18 @@
 
     const makeDiscountRibbon = (item) => {
         if (typeof item.salePrice !== "number") return "";
-        return `<span class="discount-ribbon" aria-label="Discount">50% OFF</span>`;
+        const text = item.ribbonText || `${getDiscountPercent(item)}% OFF`;
+        return `<span class="discount-ribbon" aria-label="Discount">${escapeHtml(text)}</span>`;
     };
 
     const makeCover = (item) => {
         const theme = getCoverTheme(item);
+        const imageUrl = escapeHtml(item.imageUrl || "");
+        const imageAlt = escapeHtml(`${item.title} cover image`);
         return `
-            <div class="shop-product-preview cover-theme-${theme}" data-cover-key="${item.category}" aria-hidden="true">
-                <div class="shop-cover-art">
+            <div class="shop-product-preview cover-theme-${theme}" data-cover-key="${item.category}">
+                ${imageUrl ? `<img src="${imageUrl}" alt="${imageAlt}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='block';}">` : ""}
+                <div class="shop-cover-art"${imageUrl ? ' style="display:none;"' : ""} aria-hidden="true">
                     <span class="shop-cover-orb"></span>
                     <span class="shop-cover-panel"></span>
                     <span class="shop-cover-card"></span>
@@ -763,11 +962,21 @@
         if (filtered.length === 0) {
             const empty = document.createElement("article");
             empty.className = "shop-note-card";
-            empty.innerHTML = "<h3>No products match your filters</h3><p>Try clearing one or more filters to see more results.</p>";
+            empty.innerHTML = state.catalogNotice
+                ? `<h3>Catalog update</h3><p>${escapeHtml(state.catalogNotice)}</p>`
+                : "<h3>No products match your filters</h3><p>Try clearing one or more filters to see more results.</p>";
             grid.appendChild(empty);
         } else {
+            if (state.catalogNotice) {
+                const note = document.createElement("article");
+                note.className = "shop-note-card";
+                note.innerHTML = `<h3>Catalog notice</h3><p>${escapeHtml(state.catalogNotice)}</p>`;
+                grid.appendChild(note);
+            }
+
             const sectionOrder = ["study", "cs", "analytics", "career", "faith", "health", "creator"];
-            sectionOrder.forEach((key) => {
+            const dynamicOrder = [...new Set([...sectionOrder, ...Array.from(grouped.keys())])];
+            dynamicOrder.forEach((key) => {
                 const items = grouped.get(key) || [];
                 if (items.length === 0) return;
 
@@ -904,38 +1113,96 @@
         state.previewProductId = product.id;
         previewCover.innerHTML = makeCover(product);
 
+        const previewImages = Array.isArray(product.previewImages) ? product.previewImages : [];
+        const showcaseImages = Array.isArray(product.showcaseImages) ? product.showcaseImages : [];
+        const features = Array.isArray(product.features) ? product.features : [];
+        const includes = Array.isArray(product.includes) ? product.includes : [];
+        const tags = Array.isArray(product.tags) ? product.tags : [];
+
         if (previewGallery) {
-            const theme = getCoverTheme(product);
-            previewGallery.innerHTML = ["Overview", "Detail", "Use Case"].map((label) => `
-                <div class="shop-preview-thumb shop-preview-thumb-${theme}">
-                    <span>${label}</span>
-                </div>
-            `).join("");
+            if (previewImages.length > 0) {
+                previewGallery.innerHTML = previewImages.map((src, index) => `
+                    <div class="shop-preview-thumb">
+                        <img src="${escapeHtml(src)}" alt="${escapeHtml(product.title)} preview image ${index + 1}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;" onerror="this.closest('.shop-preview-thumb').remove();">
+                    </div>
+                `).join("");
+                previewGallery.hidden = false;
+            } else {
+                previewGallery.innerHTML = "";
+                previewGallery.hidden = true;
+            }
         }
 
         if (previewPages) {
-            previewPages.innerHTML = ["01", "02", "03"].map((pageNumber) => `
-                <div class="shop-preview-page"><strong>${pageNumber}</strong><span>Sample page</span></div>
-            `).join("");
+            if (previewPagesHeading) {
+                previewPagesHeading.textContent = "Showcase";
+            }
+
+            if (showcaseImages.length > 0) {
+                previewPages.innerHTML = showcaseImages.map((src, index) => `
+                    <div class="shop-preview-page">
+                        <img src="${escapeHtml(src)}" alt="${escapeHtml(product.title)} showcase image ${index + 1}" loading="lazy" decoding="async" style="width:100%;height:145px;object-fit:cover;border-radius:12px;display:block;" onerror="this.closest('.shop-preview-page').remove();">
+                    </div>
+                `).join("");
+                if (previewPagesSection) {
+                    previewPagesSection.hidden = false;
+                }
+            } else {
+                previewPages.innerHTML = "";
+                if (previewPagesSection) {
+                    previewPagesSection.hidden = true;
+                }
+            }
         }
 
         if (previewRelated) {
-            const relatedItems = products.filter((entry) => entry.category === product.category && entry.id !== product.id).slice(0, 3);
-            previewRelated.innerHTML = relatedItems.length === 0
-                ? '<p class="shop-preview-empty">More resources in this collection will appear here soon.</p>'
-                : relatedItems.map((entry) => `
+            if (previewRelatedHeading) {
+                previewRelatedHeading.textContent = "Features";
+            }
+
+            previewRelated.innerHTML = features.length === 0
+                ? ""
+                : features.map((entry) => `
                     <article class="shop-related-item">
-                        <span>${entry.collectionLabel}</span>
-                        <strong>${entry.title}</strong>
+                        <strong>${escapeHtml(entry)}</strong>
                     </article>
                 `).join("");
+
+            if (previewRelatedSection) {
+                previewRelatedSection.hidden = features.length === 0;
+            }
         }
 
         previewCategory.textContent = product.collectionLabel;
         previewTitle.textContent = product.title;
-        previewDescription.textContent = product.description;
-        previewReviews.textContent = `${getReviewText(product)} • ${product.fileFormat}`;
-        previewIncludes.innerHTML = product.includes.map((line) => `<li>${line}</li>`).join("");
+        previewDescription.textContent = product.fullDescription;
+
+        const ratingText = product.reviewCount > 0
+            ? `${toStarString(product.rating)} (${product.reviewCount})`
+            : "★★★★★ (Coming soon)";
+        previewReviews.textContent = `${ratingText} • ${product.fileFormat}`;
+
+        previewIncludes.setAttribute("aria-label", "What's Included");
+        if (includes.length > 0) {
+            previewIncludes.innerHTML = includes.map((line) => `<li>${escapeHtml(line)}</li>`).join("");
+            previewIncludes.hidden = false;
+        } else {
+            previewIncludes.innerHTML = "";
+            previewIncludes.hidden = true;
+        }
+
+        if (previewMiniStats) {
+            const stats = [];
+            if (product.instantDownload) stats.push("Instant Download");
+            if (product.lifetimeUpdates) stats.push("Lifetime Updates");
+            if (product.fileFormat) stats.push(product.fileFormat);
+            if (product.fileSize) stats.push(product.fileSize);
+            if (product.pageCount > 0) stats.push(`${product.pageCount} pages`);
+            if (tags.length > 0) stats.push(...tags.slice(0, 3));
+
+            previewMiniStats.innerHTML = stats.map((label) => `<span>${escapeHtml(label)}</span>`).join("");
+            previewMiniStats.hidden = stats.length === 0;
+        }
 
         const effectivePrice = ShopCore.getEffectivePrice(product);
         previewPrice.innerHTML = typeof product.salePrice === "number"
@@ -1228,6 +1495,20 @@
         state.highestRated = highestRated.checked;
         renderProducts();
     });
+
+    if (featuredOnly) {
+        featuredOnly.addEventListener("change", () => {
+            state.featuredOnly = featuredOnly.checked;
+            renderProducts();
+        });
+    }
+
+    if (bestSellerOnly) {
+        bestSellerOnly.addEventListener("change", () => {
+            state.bestSellerOnly = bestSellerOnly.checked;
+            renderProducts();
+        });
+    }
 
     bundlesOnly.addEventListener("change", () => {
         state.bundlesOnly = bundlesOnly.checked;
