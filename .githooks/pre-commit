@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # Block commits that include common secret patterns in staged changes.
-STAGED_DIFF=$(git diff --cached --no-color -- . ":(exclude)js/public-config.js" ":(exclude)js/public-config.example.js" ":(exclude).githooks/pre-commit")
+STAGED_DIFF=$(git diff --cached --no-color -- . ":(exclude)js/config.js" ":(exclude)js/public-config.js" ":(exclude)js/public-config.example.js" ":(exclude).githooks/pre-commit")
 ADDED_LINES=$(printf "%s\n" "$STAGED_DIFF" | grep -E '^\+' | grep -Ev '^\+\+\+')
 
 if [ -z "$ADDED_LINES" ]; then

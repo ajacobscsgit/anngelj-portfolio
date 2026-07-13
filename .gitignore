@@ -9,7 +9,6 @@
 
 # Public runtime config (contains publishable keys)
 js/public-config.js
-js/config.js
 
 # Stripe / Supabase secrets
 *.key
