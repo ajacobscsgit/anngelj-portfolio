@@ -58,8 +58,13 @@
     const previewCover = document.querySelector("[data-preview-cover]");
     const previewCategory = document.querySelector("[data-preview-category]");
     const previewTitle = document.querySelector("[data-preview-title]");
+    const previewSubtitle = document.querySelector("[data-preview-subtitle]");
     const previewDescription = document.querySelector("[data-preview-description]");
     const previewReviews = document.querySelector("[data-preview-reviews]");
+    const previewBadges = document.querySelector("[data-preview-badges]");
+    const previewDetails = document.querySelector("[data-preview-details]");
+    const previewTags = document.querySelector("[data-preview-tags]");
+    const previewIncludesSection = document.querySelector("[data-preview-includes-section]");
     const previewIncludes = document.querySelector("[data-preview-includes]");
     const previewGallery = document.querySelector("[data-preview-gallery]");
     const previewPages = document.querySelector("[data-preview-pages]");
@@ -918,6 +923,35 @@
         `;
     };
 
+    const makePreviewCover = (item, src, altText) => {
+        const theme = getCoverTheme(item);
+        const safeSrc = escapeHtml(src || "");
+        const safeAlt = escapeHtml(altText || `${item.title} cover image`);
+
+        return `
+            <div class="shop-product-preview cover-theme-${theme}" data-cover-key="${item.category}" style="height:100%;min-height:inherit;">
+                ${safeSrc ? `<img src="${safeSrc}" alt="${safeAlt}" data-preview-main-image loading="eager" decoding="async" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';if(this.nextElementSibling){this.nextElementSibling.style.display='block';}">` : ""}
+                <div class="shop-cover-art"${safeSrc ? ' style="display:none;"' : ""} aria-hidden="true">
+                    <span class="shop-cover-orb"></span>
+                    <span class="shop-cover-panel"></span>
+                    <span class="shop-cover-card"></span>
+                    <span class="shop-cover-lines"></span>
+                    <span class="shop-cover-grid"></span>
+                </div>
+            </div>
+        `;
+    };
+
+    const setPreviewMainImage = (item, src, index) => {
+        if (!previewCover) {
+            return;
+        }
+
+        const labelIndex = Number(index) >= 0 ? Number(index) + 1 : 1;
+        const alt = `${item.title} preview image ${labelIndex}`;
+        previewCover.innerHTML = makePreviewCover(item, src || item.imageUrl, alt);
+    };
+
     const renderCard = (item) => {
         const card = document.createElement("article");
         card.className = "shop-product-card";
@@ -1111,18 +1145,20 @@
         if (!product) return;
 
         state.previewProductId = product.id;
-        previewCover.innerHTML = makeCover(product);
 
         const previewImages = Array.isArray(product.previewImages) ? product.previewImages : [];
         const showcaseImages = Array.isArray(product.showcaseImages) ? product.showcaseImages : [];
         const features = Array.isArray(product.features) ? product.features : [];
         const includes = Array.isArray(product.includes) ? product.includes : [];
         const tags = Array.isArray(product.tags) ? product.tags : [];
+        const heroImage = product.imageUrl || previewImages[0] || "";
+
+        setPreviewMainImage(product, heroImage, 0);
 
         if (previewGallery) {
             if (previewImages.length > 0) {
                 previewGallery.innerHTML = previewImages.map((src, index) => `
-                    <div class="shop-preview-thumb">
+                    <div class="shop-preview-thumb" role="button" tabindex="0" data-preview-thumb="${escapeHtml(src)}" data-preview-thumb-index="${index}" aria-label="View preview image ${index + 1}">
                         <img src="${escapeHtml(src)}" alt="${escapeHtml(product.title)} preview image ${index + 1}" loading="lazy" decoding="async" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block;" onerror="this.closest('.shop-preview-thumb').remove();">
                     </div>
                 `).join("");
@@ -1135,7 +1171,7 @@
 
         if (previewPages) {
             if (previewPagesHeading) {
-                previewPagesHeading.textContent = "Showcase";
+                previewPagesHeading.textContent = "Showcase Gallery";
             }
 
             if (showcaseImages.length > 0) {
@@ -1157,7 +1193,7 @@
 
         if (previewRelated) {
             if (previewRelatedHeading) {
-                previewRelatedHeading.textContent = "Features";
+                previewRelatedHeading.textContent = "Why You'll Love It";
             }
 
             previewRelated.innerHTML = features.length === 0
@@ -1175,33 +1211,56 @@
 
         previewCategory.textContent = product.collectionLabel;
         previewTitle.textContent = product.title;
+        if (previewSubtitle) {
+            const subtitle = String(product.subtitle || "").trim();
+            previewSubtitle.textContent = subtitle;
+            previewSubtitle.hidden = !subtitle;
+        }
         previewDescription.textContent = product.fullDescription;
 
         const ratingText = product.reviewCount > 0
-            ? `${toStarString(product.rating)} (${product.reviewCount})`
-            : "★★★★★ (Coming soon)";
-        previewReviews.textContent = `${ratingText} • ${product.fileFormat}`;
+            ? `${toStarString(product.rating)} (${product.reviewCount} review${product.reviewCount === 1 ? "" : "s"})`
+            : `${toStarString(product.rating || 5)} (Coming soon)`;
+        previewReviews.textContent = ratingText;
 
-        previewIncludes.setAttribute("aria-label", "What's Included");
-        if (includes.length > 0) {
-            previewIncludes.innerHTML = includes.map((line) => `<li>${escapeHtml(line)}</li>`).join("");
-            previewIncludes.hidden = false;
-        } else {
-            previewIncludes.innerHTML = "";
-            previewIncludes.hidden = true;
+        if (previewIncludes) {
+            previewIncludes.setAttribute("aria-label", "What's Included");
+            if (includes.length > 0) {
+                previewIncludes.innerHTML = includes.map((line) => `<li>${escapeHtml(line)}</li>`).join("");
+                previewIncludes.hidden = false;
+            } else {
+                previewIncludes.innerHTML = "";
+                previewIncludes.hidden = true;
+            }
         }
 
-        if (previewMiniStats) {
-            const stats = [];
-            if (product.instantDownload) stats.push("Instant Download");
-            if (product.lifetimeUpdates) stats.push("Lifetime Updates");
-            if (product.fileFormat) stats.push(product.fileFormat);
-            if (product.fileSize) stats.push(product.fileSize);
-            if (product.pageCount > 0) stats.push(`${product.pageCount} pages`);
-            if (tags.length > 0) stats.push(...tags.slice(0, 3));
+        if (previewIncludesSection) {
+            previewIncludesSection.hidden = includes.length === 0;
+        }
 
-            previewMiniStats.innerHTML = stats.map((label) => `<span>${escapeHtml(label)}</span>`).join("");
-            previewMiniStats.hidden = stats.length === 0;
+        if (previewBadges || previewMiniStats) {
+            const host = previewBadges || previewMiniStats;
+            const badges = [];
+            if (product.instantDownload) badges.push("Instant Download");
+            if (product.lifetimeUpdates) badges.push("Lifetime Updates");
+
+            host.innerHTML = badges.map((label) => `<span>${escapeHtml(label)}</span>`).join("");
+            host.hidden = badges.length === 0;
+        }
+
+        if (previewDetails) {
+            const details = [];
+            if (product.fileFormat) details.push(product.fileFormat);
+            if (product.fileSize) details.push(product.fileSize);
+            if (product.pageCount > 0) details.push(`${product.pageCount} pages`);
+
+            previewDetails.innerHTML = details.map((label) => `<span>${escapeHtml(label)}</span>`).join("");
+            previewDetails.hidden = details.length === 0;
+        }
+
+        if (previewTags) {
+            previewTags.innerHTML = tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("");
+            previewTags.hidden = tags.length === 0;
         }
 
         const effectivePrice = ShopCore.getEffectivePrice(product);
@@ -1356,6 +1415,21 @@
             return;
         }
 
+        const thumbBtn = event.target.closest("[data-preview-thumb]");
+        if (thumbBtn && state.previewProductId) {
+            const currentProduct = ShopCore.findProductById(state.previewProductId);
+            if (!currentProduct) {
+                return;
+            }
+
+            const src = String(thumbBtn.dataset.previewThumb || "").trim();
+            const index = Number(thumbBtn.dataset.previewThumbIndex || 0);
+            if (src) {
+                setPreviewMainImage(currentProduct, src, index);
+            }
+            return;
+        }
+
         const openReviewBtn = event.target.closest("[data-open-review-form]");
         if (openReviewBtn) {
             openReviewModal();
@@ -1426,6 +1500,29 @@
         state.search = searchInput.value;
         syncSearchClear();
         renderProducts();
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" && event.key !== " ") {
+            return;
+        }
+
+        const thumbBtn = event.target.closest("[data-preview-thumb]");
+        if (!thumbBtn || !state.previewProductId) {
+            return;
+        }
+
+        const currentProduct = ShopCore.findProductById(state.previewProductId);
+        if (!currentProduct) {
+            return;
+        }
+
+        event.preventDefault();
+        const src = String(thumbBtn.dataset.previewThumb || "").trim();
+        const index = Number(thumbBtn.dataset.previewThumbIndex || 0);
+        if (src) {
+            setPreviewMainImage(currentProduct, src, index);
+        }
     });
 
     if (clearSearchBtn) {
